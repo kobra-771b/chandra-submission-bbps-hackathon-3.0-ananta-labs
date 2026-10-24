@@ -1,0 +1,38 @@
+COPYRIGHT NOTICE
+
+Copyright (c) 2026 Ananta Labs. All rights reserved.
+
+Owner: Ananta Labs
+Work:  "Chandra" and "Chandra Link", including the PC companion source code
+       (source/chandra-link/), the distributed archive (dist/), the submission
+       slide decks (deck/), the deck generator (tools/), and the
+       documentation in this repository.
+Submitted to: BBPS Hackathon 3.0
+
+1. Ownership
+   All original source code, text, design and documentation in this
+   repository were created by Ananta Labs and are its exclusive property,
+   except for third-party components listed in LICENSES.txt, which remain
+   the property of their respective authors under their own licences.
+
+2. Permitted use
+   This repository is submitted to the BBPS Hackathon 3.0 organisers and
+   authorities. They may view, copy, run and evaluate it solely for the
+   purposes of assessing the submission, including internal review and
+   judging.
+
+3. Restrictions
+   Without prior written permission from Ananta Labs, no one may
+   redistribute, sublicense, sell, publish, or create commercial derivative
+   works from this work, other than as permitted in section 2 or by the
+   third-party licences in LICENSES.txt.
+
+4. Trademarks
+   "Ananta Labs", "Chandra" and "Chandra Link" are names used by Ananta
+   Labs. Nothing here grants any right to use these names.
+
+5. No warranty
+   The work is provided "as is", without warranty of any kind.
+
+Enquiries about permissions should be directed to Ananta Labs through the
+repository owner.

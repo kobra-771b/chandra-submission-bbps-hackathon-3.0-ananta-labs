@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chandra Link (PC)</title>
+<style>
+:root{--bg:#0b1020;--card:#151c33;--line:#26304f;--ink:#e2e8f8;--dim:#8d9ac0;--acc:#ffd666;--ok:#4ade80;--bad:#f87171;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,sans-serif;padding:24px;max-width:900px;margin-inline:auto}
+h1{font-size:22px;margin:0 0 16px}
+.cols{display:grid;grid-template-columns:300px 1fr;gap:16px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.pin{font-size:40px;letter-spacing:.3em;text-align:center;color:var(--acc);font-weight:700;margin:8px 0}
+#qr svg{width:100%;height:auto;display:block}
+button{font:inherit;color:var(--ink);background:#1d2646;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+button.pri{background:var(--acc);color:#1a1405;border-color:var(--acc);font-weight:600}
+input{font:inherit;color:var(--ink);background:#0f1530;border:1px solid var(--line);border-radius:10px;padding:9px;width:100%}
+.dev{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.dev:first-of-type{border-top:0}
+.dot{width:10px;height:10px;border-radius:50%;background:#55608a}.dot.on{background:var(--ok)}
+.grow{flex:1}small,.dim{color:var(--dim)}
+.log div{padding:3px 0;font-size:13px}
+.row{display:flex;gap:8px;margin-top:8px}
+.bar{padding:8px 12px;border-radius:10px;background:#3a2f12;color:#ffd666;margin-bottom:16px;display:none}
+</style>
+</head>
+<body>
+<h1>Chandra Link</h1>
+<div class="bar" id="dry">Test mode: actions are recorded but not run.</div>
+<div class="cols">
+  <div>
+    <div class="card">
+      <b>Pair a phone</b>
+      <div class="dim" style="margin:4px 0 8px">Same Wi-Fi. Scan with your phone camera. That's it.</div>
+      <div id="qr"><img src="/qr.svg" alt="QR code" style="width:100%;border-radius:10px;display:block"></div>
+      <div class="pin" id="pin">------</div>
+      <div class="dim" id="url" style="word-break:break-all;text-align:center"></div>
+      <div class="row"><button id="newpin" style="flex:1">New PIN</button></div>
+    </div>
+    <div class="card">
+      <b>Chandra location</b>
+      <div class="dim" style="margin:4px 0 8px">Used by "Open Chandra" on the phone.</div>
+      <input id="cpath" placeholder="C:\Users\you\AppData\Local\Programs\Chandra\Chandra.exe">
+      <div class="row"><button id="csave">Save</button></div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <b>Devices</b>
+      <div id="devs"><div class="dim">No phones paired yet.</div></div>
+    </div>
+    <div class="card">
+      <b>Send to phones</b>
+      <div class="row"><input id="st" placeholder="Title"></div>
+      <div class="row"><input id="sx" placeholder="Message"></div>
+      <div class="row"><input id="su" placeholder="Link (optional)"></div>
+      <div class="row"><button class="pri" id="snd">Send notification</button><button id="ring">Ring phones</button><button id="openc">Open Chandra on phone</button></div>
+    </div>
+    <div class="card log"><b>Activity</b><div id="log"></div></div>
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+let ws, pathFocus = false;
+function conn() {
+  ws = new WebSocket(`ws://${location.host}/pcws`);
+  ws.onmessage = e => { const m = JSON.parse(e.data); if (m.t === "state") render(m); };
+  ws.onclose = () => setTimeout(conn, 1500);
+}
+function send(o) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); }
+function ago(t) { if (!t) return "never"; const s = Math.max(0, Date.now() / 1000 - t) | 0; return s < 60 ? "just now" : s < 3600 ? (s / 60 | 0) + " min ago" : s < 86400 ? (s / 3600 | 0) + " h ago" : (s / 86400 | 0) + " d ago"; }
+function render(s) {
+  if ($("pin").textContent !== s.pin) $("qr").firstElementChild.src = "/qr.svg?" + s.pin;
+  $("pin").textContent = s.pin; $("url").textContent = s.url; $("dry").style.display = s.dry ? "block" : "none";
+  if (!pathFocus && document.activeElement !== $("cpath")) $("cpath").value = s.chandra_path;
+  const d = $("devs"); d.textContent = "";
+  if (!s.devices.length) { const e = document.createElement("div"); e.className = "dim"; e.textContent = "No phones paired yet."; d.appendChild(e); }
+  s.devices.forEach(x => {
+    const r = document.createElement("div"); r.className = "dev";
+    const dot = document.createElement("span"); dot.className = "dot" + (x.online ? " on" : "");
+    const n = document.createElement("div"); n.className = "grow"; n.textContent = x.name;
+    const sm = document.createElement("small"); sm.textContent = x.online ? " online" : " last seen " + ago(x.last_seen); n.appendChild(sm);
+    const rm = document.createElement("button"); rm.textContent = "Remove"; rm.onclick = () => { if (confirm("Remove " + x.name + "?")) send({ t: "revoke", device: x.id }); };
+    r.append(dot, n, rm); d.appendChild(r);
+  });
+  const l = $("log"); l.textContent = "";
+  s.events.forEach(ev => { const r = document.createElement("div"); r.textContent = new Date(ev.t * 1000).toLocaleTimeString() + "  " + ev.text; l.appendChild(r); });
+}
+$("newpin").onclick = () => send({ t: "newpin" });
+$("csave").onclick = () => send({ t: "chandra_path", path: $("cpath").value });
+$("snd").onclick = () => { send({ t: "send", device: "all", kind: "notify", title: $("st").value || "Message from PC", text: $("sx").value, url: $("su").value }); $("sx").value = ""; $("su").value = ""; };
+$("openc").onclick = () => send({ t: "send", device: "all", kind: "open_chandra", title: "Open Chandra", text: "Your PC wants you in Chandra" });
+$("ring").onclick = () => send({ t: "send", device: "all", kind: "ring", title: "Your PC is looking for you", text: "" });
+conn();
+</script>
+</body>
+</html>

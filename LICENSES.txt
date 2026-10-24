@@ -1,0 +1,29 @@
+LICENSES
+
+1. Ananta Labs original work
+   Copyright (c) 2026 Ananta Labs. All rights reserved.
+   Made available to the BBPS Hackathon 3.0 organisers and authorities for
+   evaluation only, under the terms in COPYRIGHTS.txt. No open-source
+   licence is granted for Ananta Labs' own code at this time.
+
+2. Third-party components
+   Chandra Link depends on the following open-source packages (see
+   source/chandra-link/requirements.txt). They are installed from PyPI at
+   setup time and are not modified or bundled in this repository. Each
+   remains under its own licence; the notices below are for reference.
+   Please confirm against the installed versions before redistribution.
+
+   aiohttp   (>= 3.9)    Apache License 2.0     https://github.com/aio-libs/aiohttp
+   segno     (>= 1.6)    BSD 3-Clause License   https://github.com/heuer/segno
+   zeroconf  (>= 0.130)  LGPL-2.1-or-later      https://github.com/python-zeroconf/python-zeroconf
+
+   zeroconf is used as an unmodified, dynamically installed library.
+
+3. Runtime and platform
+   Python (PSF License), Windows PowerShell and Microsoft Edge WebView2
+   (Microsoft licence terms) are used at runtime on the user's machine and
+   are not distributed with this repository.
+
+4. Slide decks
+   The decks in deck/ use no third-party code, fonts or images; they are
+   plain HTML, CSS and JavaScript written by Ananta Labs.

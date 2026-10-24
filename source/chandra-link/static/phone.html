@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Chandra Link</title>
+<style>
+:root{--bg:#0b1020;--card:#151c33;--line:#26304f;--ink:#e2e8f8;--dim:#8d9ac0;--acc:#ffd666;--ok:#4ade80;--bad:#f87171;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,sans-serif;padding:16px 16px 40px;max-width:520px;margin-inline:auto}
+h1{font-size:20px;margin:4px 0 14px;display:flex;align-items:center;gap:10px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--bad)}
+.dot.on{background:var(--ok)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;color:var(--ink);background:#1d2646;border:1px solid var(--line);border-radius:12px;padding:14px 10px;min-height:52px}
+button:active{transform:scale(.97)}
+button.pri{background:var(--acc);color:#1a1405;border-color:var(--acc);font-weight:600}
+button.warn{border-color:#7f3b3b;color:#fca5a5}
+button:disabled{opacity:.45}
+input{width:100%;font:inherit;color:var(--ink);background:#0f1530;border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px}
+input.pin{font-size:28px;letter-spacing:.35em;text-align:center}
+label{font-size:13px;color:var(--dim);display:block;margin-bottom:4px}
+.row{display:flex;gap:10px}.row>*{flex:1}
+#toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));background:#222c52;border:1px solid var(--line);border-radius:12px;padding:12px 14px;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}
+#toast.show{opacity:1;transform:none}
+.msg{border-top:1px solid var(--line);padding:10px 0}.msg:first-child{border-top:0}
+.msg b{display:block}.msg small{color:var(--dim)}
+a{color:var(--acc);word-break:break-all}
+.hide{display:none}
+summary{color:var(--dim);padding:6px 0}
+</style>
+</head>
+<body>
+<h1><span class="dot" id="dot"></span><span id="title">Chandra Link</span></h1>
+
+<section id="pairView" class="hide">
+  <div class="card">
+    <p style="margin-top:0">Open <b>Chandra Link</b> on your PC, then enter the 6-digit PIN shown there.</p>
+    <label for="name">This phone's name</label>
+    <input id="name" maxlength="40" autocomplete="off">
+    <label for="pin">PIN</label>
+    <input id="pin" class="pin" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••">
+    <button class="pri" id="pairBtn" style="width:100%">Pair</button>
+  </div>
+</section>
+
+<section id="mainView" class="hide">
+  <div class="card grid">
+    <button id="aPing">Ping PC</button>
+    <button id="aChandra">Open Chandra</button>
+    <button id="aLock">Lock PC</button>
+    <button id="aSleep" class="warn">Sleep PC</button>
+  </div>
+  <div class="card">
+    <label for="ask">Ask Chandra on your PC</label>
+    <input id="ask" autocomplete="off" placeholder="Type an instruction for Chandra">
+    <button id="aAsk" class="pri" style="width:100%">Send to Chandra</button>
+    <div id="answer" class="hide" style="margin-top:12px;white-space:pre-wrap;border-top:1px solid var(--line);padding-top:10px"></div>
+  </div>
+  <div class="card">
+    <label for="txt">Text or link to send to the PC</label>
+    <input id="txt" autocomplete="off" placeholder="Paste text or a link">
+    <div class="row">
+      <button id="aClip">Copy to PC</button>
+      <button id="aUrl">Open on PC</button>
+    </div>
+    <div class="row" style="margin-top:10px"><button id="aNote">Show as PC notification</button></div>
+  </div>
+  <div class="card">
+    <b>From your PC</b>
+    <div id="inbox"><small style="color:var(--dim)">Nothing yet.</small></div>
+    <button id="alerts" style="width:100%;margin-top:10px">Turn on alerts (sound, vibration)</button>
+  </div>
+  <details class="card"><summary>More</summary>
+    <div class="row"><button id="aShutdown" class="warn">Shut down PC</button><button id="unpair">Forget this pairing</button></div>
+    <div class="row" style="margin-top:10px"><button id="changePc" style="display:none">Change PC address</button></div>
+  </details>
+</section>
+<div id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const KEY = "chandra-link-token";
+let token = localStorage.getItem(KEY), ws, retry = 0, nextId = 1, pending = {}, audio, alertsOn = false;
+
+const inApp = !!window.ChandraNative;
+function native(fn, ...a) { try { if (window.ChandraNative) window.ChandraNative[fn](...a); } catch {} }
+function toast(t) { const e = $("toast"); e.textContent = t; e.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => e.classList.remove("show"), 2600); }
+function show(view) { $("pairView").classList.toggle("hide", view !== "pair"); $("mainView").classList.toggle("hide", view !== "main"); }
+function setOnline(on) { $("dot").classList.toggle("on", on); document.querySelectorAll("#mainView button").forEach(b => { if (b.id !== "unpair" && b.id !== "alerts") b.disabled = !on; }); }
+
+$("name").value = (/Android.*?;\s*([^;)]+)\sBuild/.exec(navigator.userAgent) || [])[1] || "My phone";
+
+$("pairBtn").onclick = async () => {
+  $("pairBtn").disabled = true;
+  try {
+    const r = await fetch("/api/pair", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin: $("pin").value, name: $("name").value }) });
+    const j = await r.json();
+    if (!j.ok) { toast(j.error || "Pairing failed"); return; }
+    token = j.token; localStorage.setItem(KEY, token); native("setToken", token); $("pin").value = ""; start();
+  } catch { toast("Can't reach the PC"); }
+  finally { $("pairBtn").disabled = false; }
+};
+
+function connect() {
+  if (!token || (ws && ws.readyState <= 1)) return;
+  ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws?token=${encodeURIComponent(token)}`);
+  ws.onopen = () => { retry = 0; };
+  ws.onmessage = e => {
+    const m = JSON.parse(e.data);
+    if (m.t === "hello") { $("title").textContent = m.pc; setOnline(true); show("main"); $("aChandra").style.display = ""; }
+    else if (m.t === "result") {
+      const p = pending[m.id]; delete pending[m.id]; toast(m.msg);
+      if (p === "ask") { $("aAsk").disabled = false; $("aAsk").textContent = "Send to Chandra"; showAnswer(m.ok ? (m.reply || "") : m.msg); }
+    }
+    else if (m.t === "msg") incoming(m);
+  };
+  ws.onclose = e => {
+    setOnline(false);
+    setTimeout(() => { ws = null; if (token) start(); }, Math.min(1000 * 2 ** retry++, 8000));
+  };
+}
+
+async function autoPair() {
+  const pin = new URLSearchParams(location.search).get("pin");
+  if (!pin || token) return;
+  history.replaceState(null, "", "/");
+  try {
+    const r = await fetch("/api/pair", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin, name: $("name").value }) });
+    const j = await r.json();
+    if (j.ok) { token = j.token; localStorage.setItem(KEY, token); native("setToken", token); toast("Paired"); }
+    else toast(j.error || "Pairing failed");
+  } catch { toast("Can't reach the PC"); }
+}
+async function start() {
+  await autoPair();
+  if (!token) { show("pair"); return; }
+  try {
+    const r = await fetch("/api/check?token=" + encodeURIComponent(token), { cache: "no-store" });
+    if (r.status === 401) { localStorage.removeItem(KEY); native("clearToken"); token = null; show("pair"); toast("Pairing was removed. Pair again."); return; }
+    native("setToken", token);
+  } catch { /* PC unreachable: stay on the main view and keep retrying */ }
+  show("main"); setOnline(false); connect();
+}
+
+function showAnswer(t) { const e = $("answer"); e.textContent = t; e.classList.toggle("hide", !t); }
+function send(action, extra = {}) {
+  if (!ws || ws.readyState !== 1) { toast("PC not connected"); return false; }
+  const id = nextId++; pending[id] = action === "ask_chandra" ? "ask" : 1;
+  ws.send(JSON.stringify({ t: "action", id, action, ...extra }));
+  return true;
+}
+$("aAsk").onclick = () => {
+  const v = $("ask").value.trim(); if (!v) return;
+  if (send("ask_chandra", { text: v })) { $("aAsk").disabled = true; $("aAsk").textContent = "Chandra is working…"; showAnswer(""); $("ask").value = ""; }
+};
+$("ask").addEventListener("keydown", e => { if (e.key === "Enter") $("aAsk").click(); });
+$("aPing").onclick = () => send("ping");
+$("aChandra").onclick = () => send("launch_chandra");
+$("aLock").onclick = () => send("lock");
+$("aSleep").onclick = () => send("sleep");
+$("aShutdown").onclick = () => send("shutdown");
+$("aClip").onclick = () => { const v = $("txt").value; if (v) send("clipboard", { text: v }); };
+$("aUrl").onclick = () => { const v = $("txt").value.trim(); if (v) send("open_url", { url: /^https?:\/\//i.test(v) ? v : "https://" + v }); };
+$("aNote").onclick = () => { const v = $("txt").value; if (v) send("notify", { title: $("name").value || "Phone", text: v }); };
+$("unpair").onclick = () => { if (confirm("Forget this pairing on the phone? (Remove it on the PC page too.)")) { localStorage.removeItem(KEY); native("clearToken"); token = null; if (ws) ws.close(); show("pair"); } };
+if (inApp) { $("alerts").style.display = "none"; $("changePc").style.display = ""; $("changePc").onclick = () => native("changePc"); }
+
+function beep() {
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.connect(g); g.connect(audio.destination); o.frequency.value = 880; g.gain.value = 0.2;
+    o.start(); o.stop(audio.currentTime + 0.25);
+  } catch {}
+}
+$("alerts").onclick = async () => {
+  alertsOn = true; beep();
+  if (navigator.vibrate) navigator.vibrate(120);
+  if ("Notification" in window && Notification.permission === "default") { try { await Notification.requestPermission(); } catch {} }
+  toast("Alerts on while this page is open");
+};
+function incoming(m) {
+  const box = $("inbox"); if (box.firstElementChild && box.firstElementChild.tagName === "SMALL") box.textContent = "";
+  const d = document.createElement("div"); d.className = "msg";
+  const b = document.createElement("b"); b.textContent = m.title; d.appendChild(b);
+  if (m.text) { const p = document.createElement("div"); p.textContent = m.text; d.appendChild(p); }
+  if (m.kind === "open_chandra") { const a = document.createElement("a"); a.href = "intent://#Intent;package=labs.ananta.chandra;end"; a.textContent = "Tap to open Chandra"; a.style.display = "block"; a.style.fontWeight = "600"; d.appendChild(a); }
+  if (m.url && /^https?:\/\//i.test(m.url)) { const a = document.createElement("a"); a.href = m.url; a.textContent = m.url; a.target = "_blank"; a.rel = "noopener"; d.appendChild(a); }
+  const s = document.createElement("small"); s.textContent = new Date().toLocaleTimeString(); d.appendChild(s);
+  box.prepend(d);
+  if (m.kind === "ring") { beep(); setTimeout(beep, 400); setTimeout(beep, 800); if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]); }
+  else { beep(); if (navigator.vibrate) navigator.vibrate(150); }
+  if ("Notification" in window && Notification.permission === "granted" && document.hidden) { try { new Notification(m.title, { body: m.text }); } catch {} }
+  toast(m.title + (m.text ? ": " + m.text : ""));
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) connect(); });
+window.addEventListener("online", connect);
+start();
+</script>
+</body>
+</html>
