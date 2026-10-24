@@ -21,7 +21,7 @@ exceptions below. Nothing was edited.
 | `EULA.txt`, `desktop/THIRD-PARTY-NOTICES.md` | End-user licence and third-party notices |
 
 ## Left out on purpose
-- **`desktop/source/chandra.env`**: it contained live API keys (a "personal setup"). It is not committed.
+- **`desktop/source/chandra.env`**: it contained live API keys (a "personal setup"; since revoked). It is not committed.
   `desktop/chandra.env.example` shows the format.
 - **`desktop/runtime/`** (Python 3.12 runtime, pywebview and libraries, 35 MB, 899 files): third-party, unmodified, not Ananta Labs source.
 - **`OpenJarvis/`** (14 MB snapshot of the upstream open-source OpenJarvis project, used as the "Chandra Engine"): third-party. Upstream: https://github.com/open-jarvis/OpenJarvis

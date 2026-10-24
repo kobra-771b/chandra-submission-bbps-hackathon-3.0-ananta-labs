@@ -1,3 +1,3 @@
 1c9458b46b887a6cbd2cc6442d140d5182f6d18fcbbd75f6fb5744b4085310f7  ChandraLink-PC.zip
 ef58719576a9a62b117fc3cf0eb93da7093e3ec1ba343b9935b5966024d77234  Chandra-v1.0.1-android.apk
-187c8ada8a5f867d82b6a8b77427aa7902f4e6b69e9539a433b3c24f3d555945  Chandra_v1.0.1-production-ready.exe  (NOT in this repo: see dist/README.md)
+187c8ada8a5f867d82b6a8b77427aa7902f4e6b69e9539a433b3c24f3d555945  Chandra_v1.0.1-production-ready.exe

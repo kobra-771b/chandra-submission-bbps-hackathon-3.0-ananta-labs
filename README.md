@@ -18,16 +18,14 @@ This submission contains three parts:
 | `chandra-desktop-exe/` | **Source of Chandra Desktop (Windows EXE)**, unpacked from `Chandra_v1.0.1-production-ready.exe`. Start at `PROVENANCE.md`, then `desktop/source/chandra.py` |
 | `chandra-android-apk/` | **Source of Chandra for Android (APK)**, recovered from `Chandra-v1.0.1-android.apk`. Start at `PROVENANCE.md` |
 | `chandra-link-pc/` | **Source of Chandra Link** (PC companion, Python), with its own README |
-| `dist/` | Shipped binaries: `ChandraLink-PC.zip`, `Chandra-v1.0.1-android.apk`, checksums |
+| `dist/` | Shipped binaries: `Chandra_v1.0.1-production-ready.exe`, `Chandra-v1.0.1-android.apk`, `ChandraLink-PC.zip`, checksums |
 | `deck/` | Submission slide decks (static HTML), see below |
 | `tools/build_deck.py` | Generator for the decks (`python tools/build_deck.py`) |
 | `README.md`, `LICENSES.txt`, `COPYRIGHTS.txt` | Project, licensing and copyright notices |
 
 The three source folders are kept separate on purpose. Each `PROVENANCE.md` states exactly where the files came from, how exact they are, and what was left out (third-party runtimes and one file with private keys).
 
-> **Binary not included:** `Chandra_v1.0.1-production-ready.exe` (Chandra Setup) is available at
-> https://github.com/kobrx7-god/chandra-full/releases/tag/exe (SHA-256 in `dist/SHA256SUMS.txt`).
-> It is not copied here because that build carries embedded API keys. See `dist/README.md`.
+> `dist/` holds all three shipped binaries: the Windows Setup EXE, the Android APK and the Chandra Link ZIP, with SHA-256 checksums.
 
 ## Slide decks
 
