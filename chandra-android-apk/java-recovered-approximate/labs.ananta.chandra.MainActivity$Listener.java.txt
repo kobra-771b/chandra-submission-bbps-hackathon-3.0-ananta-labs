@@ -1,0 +1,142 @@
+package labs.ananta.chandra;
+ class MainActivity$Listener implements android.speech.RecognitionListener {
+    private final String id;
+    private final String lang;
+    final synthetic labs.ananta.chandra.MainActivity this$0;
+
+    MainActivity$Listener(labs.ananta.chandra.MainActivity p1, String p2, String p3)
+    {
+        this.this$0 = p1;
+        this.id = p2;
+        this.lang = p3;
+        return;
+    }
+
+    private String alts(android.os.Bundle p10, boolean p11)
+    {
+        org.json.JSONObject v0_1 = new org.json.JSONObject();
+        try {
+            String v1_1 = p10.getStringArrayList("results_recognition");
+            float[] v2_1 = p10.getFloatArray("confidence_scores");
+            org.json.JSONArray v3_1 = new org.json.JSONArray();
+        } catch (String v1) {
+            return v0_1.toString();
+        }
+        if (v1_1 != null) {
+            int v4_0 = 0;
+            while (v4_0 < v1_1.size()) {
+                double v7_4;
+                org.json.JSONObject v5_2 = new org.json.JSONObject();
+                v5_2.put("t", v1_1.get(v4_0));
+                if ((v2_1 == null) || ((v4_0 >= v2_1.length) || (v2_1[v4_0] < 0))) {
+                    if (!p11) {
+                        v7_4 = 0;
+                    } else {
+                        v7_4 = 4606281698874543309;
+                    }
+                } else {
+                    v7_4 = ((double) v2_1[v4_0]);
+                }
+                v5_2.put("c", v7_4);
+                v3_1.put(v5_2);
+                v4_0++;
+            }
+        }
+        v0_1.put("final", p11);
+        v0_1.put("alts", v3_1);
+        return v0_1.toString();
+    }
+
+    private boolean mine()
+    {
+        return this.id.equals(labs.ananta.chandra.MainActivity.-$$Nest$fgetrecId(this.this$0));
+    }
+
+    public void onBeginningOfSpeech()
+    {
+        if (this.mine()) {
+            labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "speechstart", 0);
+        }
+        return;
+    }
+
+    public void onBufferReceived(byte[] p1)
+    {
+        return;
+    }
+
+    public void onEndOfSpeech()
+    {
+        if (this.mine()) {
+            labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "speechend", 0);
+        }
+        return;
+    }
+
+    public void onError(int p6)
+    {
+        if (this.mine()) {
+            labs.ananta.chandra.MainActivity.-$$Nest$mdrop(this.this$0);
+            String v0_2 = labs.ananta.chandra.MainActivity.-$$Nest$smsrError(p6);
+            if (("language-not-supported".equals(v0_2)) && (this.lang != null)) {
+                labs.ananta.chandra.MainActivity.-$$Nest$fgetbadLangs(this.this$0).add(this.lang);
+            }
+            labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "error", v0_2);
+            labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "end", 0);
+            if ("not-allowed".equals(v0_2)) {
+                labs.ananta.chandra.MainActivity.-$$Nest$mmicBlocked(this.this$0);
+            }
+            return;
+        } else {
+            return;
+        }
+    }
+
+    public void onEvent(int p1, android.os.Bundle p2)
+    {
+        return;
+    }
+
+    public void onPartialResults(android.os.Bundle p6)
+    {
+        if (this.mine()) {
+            java.util.ArrayList v0_2 = p6.getStringArrayList("results_recognition");
+            if ((v0_2 != null) && ((!v0_2.isEmpty()) && (!((String) v0_2.get(0)).trim().isEmpty()))) {
+                labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "result", this.alts(p6, 0));
+            }
+            return;
+        } else {
+            return;
+        }
+    }
+
+    public void onReadyForSpeech(android.os.Bundle p5)
+    {
+        if (this.mine()) {
+            labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "start", 0);
+        }
+        return;
+    }
+
+    public void onResults(android.os.Bundle p6)
+    {
+        if (this.mine()) {
+            java.util.ArrayList v0_2 = p6.getStringArrayList("results_recognition");
+            labs.ananta.chandra.MainActivity.-$$Nest$mdrop(this.this$0);
+            if ((v0_2 == null) || ((v0_2.isEmpty()) || (((String) v0_2.get(0)).trim().isEmpty()))) {
+                labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "error", "no-speech");
+            } else {
+                labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "result", this.alts(p6, 1));
+            }
+            labs.ananta.chandra.MainActivity.-$$Nest$msrEvent(this.this$0, this.id, "end", 0);
+            return;
+        } else {
+            return;
+        }
+    }
+
+    public void onRmsChanged(float p1)
+    {
+        return;
+    }
+}

@@ -1,0 +1,16 @@
+package labs.ananta.chandra;
+public final synthetic class MainActivity$$ExternalSyntheticLambda1 implements android.content.DialogInterface$OnClickListener {
+    public final synthetic labs.ananta.chandra.MainActivity f$0;
+
+    public synthetic MainActivity$$ExternalSyntheticLambda1(labs.ananta.chandra.MainActivity p1)
+    {
+        this.f$0 = p1;
+        return;
+    }
+
+    public final void onClick(android.content.DialogInterface p2, int p3)
+    {
+        labs.ananta.chandra.MainActivity.$r8$lambda$2Res6cAlD5iszgqIP9BF_pkUnKE(this.f$0, p2, p3);
+        return;
+    }
+}

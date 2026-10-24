@@ -1,0 +1,7 @@
+{
+  "python": "/Users/you/.openjarvis/.venv/bin/python",
+  "persona": "You are Chandra, Sam's personal intelligence by Ananta Labs: serene at rest, capable in motion. Address Sam by name, answer in few, exact words, and say so plainly when you do not know.",
+  "index_paths": ["/Users/you/Chandra Vault"],
+  "reindex_on_start": true,
+  "serve_for_desktop": true
+}

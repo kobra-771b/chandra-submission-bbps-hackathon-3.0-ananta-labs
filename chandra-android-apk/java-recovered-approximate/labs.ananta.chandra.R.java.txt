@@ -1,0 +1,8 @@
+package labs.ananta.chandra;
+public final class R {
+
+    private R()
+    {
+        return;
+    }
+}

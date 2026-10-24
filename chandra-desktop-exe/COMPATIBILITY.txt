@@ -1,0 +1,18 @@
+Chandra v1.0.0 (production-ready): where it runs
+
+BUILT FOR
+- Windows 10 (64-bit, version 1809 or later) and Windows 11, 64-bit. Intel and AMD PCs (AMD64 / x64). Windows 11 on ARM runs it
+  through Windows' built-in x64 emulation.
+- The window needs Microsoft Edge WebView2 Runtime and .NET Framework 4.6.2 or newer. Without WebView2, Chandra still opens, in
+  your web browser, and says what is missing.
+
+NOT SUPPORTED
+- 32-bit Windows (x86) and ARM32: the program and its Python runtime are 64-bit, and WebView2 does not exist for ARM32.
+- macOS and Linux: not part of these packages (they run from source with start.sh).
+
+HOW THIS BUILD WAS TESTED
+- Automated: the unit and browser-flow test suite (195 tests) passes on Linux.
+- Installed and started under Wine with the bundled 64-bit Windows Python; the installed copy found and used the API keys carried by
+  a personal setup.
+- The licence page of Setup was rendered and clicked through under Wine; a silent install with /ACCEPTEULA installed Chandra.
+- NOT tested on a real Windows PC: the native window, the WebView2 notice, the microphone, and the Windows message boxes.

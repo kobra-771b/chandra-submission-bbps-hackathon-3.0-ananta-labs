@@ -1,0 +1,9 @@
+package labs.ananta.chandra;
+public final class R$xml {
+    public static int network_security_config = 2131034112;
+
+    private R$xml()
+    {
+        return;
+    }
+}

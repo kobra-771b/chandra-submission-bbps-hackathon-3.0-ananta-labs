@@ -1,0 +1,34 @@
+package labs.ananta.chandra;
+ class MainActivity$3 extends android.speech.tts.UtteranceProgressListener {
+    final synthetic labs.ananta.chandra.MainActivity this$0;
+
+    MainActivity$3(labs.ananta.chandra.MainActivity p1)
+    {
+        this.this$0 = p1;
+        return;
+    }
+
+    public void onDone(String p3)
+    {
+        labs.ananta.chandra.MainActivity.-$$Nest$mttsEvent(this.this$0, p3, "end");
+        return;
+    }
+
+    public void onError(String p3)
+    {
+        labs.ananta.chandra.MainActivity.-$$Nest$mttsEvent(this.this$0, p3, "error");
+        return;
+    }
+
+    public void onStart(String p3)
+    {
+        labs.ananta.chandra.MainActivity.-$$Nest$mttsEvent(this.this$0, p3, "start");
+        return;
+    }
+
+    public void onStop(String p3, boolean p4)
+    {
+        labs.ananta.chandra.MainActivity.-$$Nest$mttsEvent(this.this$0, p3, "end");
+        return;
+    }
+}

@@ -1,0 +1,826 @@
+package labs.ananta.chandra;
+public class MainActivity extends android.app.Activity {
+    private static final android.os.Handler MAIN = None;
+    private static final String[] MIC_ONLY = None;
+    private static final int REQ_FILES = 41;
+    private static final int REQ_LOC = 43;
+    private static final int REQ_MIC = 42;
+    private static android.content.Context app;
+    private String appOrigin;
+    private final java.util.Set badLangs;
+    private android.webkit.ValueCallback fileCallback;
+    private android.webkit.GeolocationPermissions$Callback geoCallback;
+    private String geoOrigin;
+    private boolean micAsking;
+    private long micDialogAt;
+    private final java.util.List micRequests;
+    private boolean noRecToast;
+    private boolean paused;
+    private android.speech.SpeechRecognizer rec;
+    private String recId;
+    private android.speech.tts.TextToSpeech tts;
+    private boolean ttsReady;
+    private String waitId;
+    private android.content.Intent waitIntent;
+    private android.webkit.WebView web;
+
+    public static synthetic void $r8$lambda$21m1Bnt6zVreZj_y6L1GWLMWXEo(labs.ananta.chandra.MainActivity p0, String p1)
+    {
+        p0.lambda$startHost$0(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$2Res6cAlD5iszgqIP9BF_pkUnKE(labs.ananta.chandra.MainActivity p0, android.content.DialogInterface p1, int p2)
+    {
+        p0.lambda$micBlocked$3(p1, p2);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$7TrNTZCClhMQQr-MQXOlNhGkNFE(labs.ananta.chandra.MainActivity p0, String p1)
+    {
+        p0.lambda$startTts$4(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$AI8whVK84jsyST6V0gEuhvufxXA(labs.ananta.chandra.MainActivity p0, int p1)
+    {
+        p0.lambda$startTts$5(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$ArW43K5QYkxRhGHWpeZzgKrlz9I(labs.ananta.chandra.MainActivity p0, String p1)
+    {
+        p0.lambda$srEvent$7(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$GEH80cF--nRsxO4JqS4pSmS-CzM(labs.ananta.chandra.MainActivity p0, String p1)
+    {
+        p0.lambda$startHost$1(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$MOoZWzI8rNSHb4Nq1fFPctZ9p28(labs.ananta.chandra.MainActivity p0, String p1)
+    {
+        p0.lambda$ttsEvent$6(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$cIW8zURTtbnMIabS7-oyl3K-q1k(labs.ananta.chandra.MainActivity p0)
+    {
+        p0.lambda$startHost$2();
+        return;
+    }
+
+    static bridge synthetic String -$$Nest$fgetappOrigin(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.appOrigin;
+    }
+
+    static bridge synthetic java.util.Set -$$Nest$fgetbadLangs(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.badLangs;
+    }
+
+    static bridge synthetic android.webkit.ValueCallback -$$Nest$fgetfileCallback(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.fileCallback;
+    }
+
+    static bridge synthetic java.util.List -$$Nest$fgetmicRequests(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.micRequests;
+    }
+
+    static bridge synthetic android.speech.SpeechRecognizer -$$Nest$fgetrec(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.rec;
+    }
+
+    static bridge synthetic String -$$Nest$fgetrecId(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.recId;
+    }
+
+    static bridge synthetic android.speech.tts.TextToSpeech -$$Nest$fgettts(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.tts;
+    }
+
+    static bridge synthetic boolean -$$Nest$fgetttsReady(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.ttsReady;
+    }
+
+    static bridge synthetic String -$$Nest$fgetwaitId(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.waitId;
+    }
+
+    static bridge synthetic void -$$Nest$fputfileCallback(labs.ananta.chandra.MainActivity p0, android.webkit.ValueCallback p1)
+    {
+        p0.fileCallback = p1;
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$fputgeoCallback(labs.ananta.chandra.MainActivity p0, android.webkit.GeolocationPermissions$Callback p1)
+    {
+        p0.geoCallback = p1;
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$fputgeoOrigin(labs.ananta.chandra.MainActivity p0, String p1)
+    {
+        p0.geoOrigin = p1;
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$maskMic(labs.ananta.chandra.MainActivity p0)
+    {
+        p0.askMic();
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$mdrop(labs.ananta.chandra.MainActivity p0)
+    {
+        p0.drop();
+        return;
+    }
+
+    static bridge synthetic boolean -$$Nest$mhas(labs.ananta.chandra.MainActivity p0, String p1)
+    {
+        return p0.has(p1);
+    }
+
+    static bridge synthetic void -$$Nest$mmicBlocked(labs.ananta.chandra.MainActivity p0)
+    {
+        p0.micBlocked();
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$msrEnd(labs.ananta.chandra.MainActivity p0)
+    {
+        p0.srEnd();
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$msrEvent(labs.ananta.chandra.MainActivity p0, String p1, String p2, String p3)
+    {
+        p0.srEvent(p1, p2, p3);
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$msrStart(labs.ananta.chandra.MainActivity p0, String p1, String p2, boolean p3, int p4)
+    {
+        p0.srStart(p1, p2, p3, p4);
+        return;
+    }
+
+    static bridge synthetic void -$$Nest$mttsEvent(labs.ananta.chandra.MainActivity p0, String p1, String p2)
+    {
+        p0.ttsEvent(p1, p2);
+        return;
+    }
+
+    static bridge synthetic String -$$Nest$mvoicesJson(labs.ananta.chandra.MainActivity p0)
+    {
+        return p0.voicesJson();
+    }
+
+    static bridge synthetic android.os.Handler -$$Nest$sfgetMAIN()
+    {
+        return labs.ananta.chandra.MainActivity.MAIN;
+    }
+
+    static bridge synthetic String[] -$$Nest$sfgetMIC_ONLY()
+    {
+        return labs.ananta.chandra.MainActivity.MIC_ONLY;
+    }
+
+    static bridge synthetic android.content.Context -$$Nest$sfgetapp()
+    {
+        return labs.ananta.chandra.MainActivity.app;
+    }
+
+    static bridge synthetic String -$$Nest$smsrError(int p0)
+    {
+        return labs.ananta.chandra.MainActivity.srError(p0);
+    }
+
+    static MainActivity()
+    {
+        labs.ananta.chandra.MainActivity.MAIN = new android.os.Handler(android.os.Looper.getMainLooper());
+        String[] v0_3 = new String[1];
+        v0_3[0] = "android.webkit.resource.AUDIO_CAPTURE";
+        labs.ananta.chandra.MainActivity.MIC_ONLY = v0_3;
+        return;
+    }
+
+    public MainActivity()
+    {
+        this.micRequests = new java.util.ArrayList();
+        this.appOrigin = "http://127.0.0.1";
+        this.badLangs = new java.util.HashSet();
+        return;
+    }
+
+    private void askMic()
+    {
+        if (!this.micAsking) {
+            this.micAsking = 1;
+            String[] v0_2 = new String[1];
+            v0_2[0] = "android.permission.RECORD_AUDIO";
+            this.requestPermissions(v0_2, 42);
+            return;
+        } else {
+            return;
+        }
+    }
+
+    public static String clipGet()
+    {
+        String[] v1 = new String[1];
+        v1[0] = "";
+        java.util.concurrent.CountDownLatch v0_1 = new java.util.concurrent.CountDownLatch(1);
+        labs.ananta.chandra.MainActivity.MAIN.post(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda6(v1, v0_1));
+        v0_1.await(3, java.util.concurrent.TimeUnit.SECONDS);
+        return v1[0];
+    }
+
+    public static void clipSet(String p2)
+    {
+        labs.ananta.chandra.MainActivity.MAIN.post(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda5(p2));
+        return;
+    }
+
+    private java.io.File copyAssets(String p17, java.io.File p18)
+    {
+        p18.mkdirs();
+        android.content.res.AssetManager v3 = this.getAssets();
+        String[] v4 = v3.list(p17);
+        if (v4 != null) {
+            long v7 = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).lastUpdateTime;
+            Throwable v0_1 = v4.length;
+            Throwable v5_1 = 0;
+            while (v5_1 < v0_1) {
+                String v9 = v4[v5_1];
+                java.io.File v10_1 = new java.io.File(p18, v9);
+                if ((!v10_1.exists()) || (v10_1.lastModified() < v7)) {
+                    java.io.InputStream v11_9 = v3.open(new StringBuilder().append(p17).append("/").append(v9).toString());
+                    try {
+                        java.io.FileOutputStream v12_2 = new java.io.FileOutputStream(v10_1);
+                    } catch (Throwable v0_4) {
+                        Throwable v5_3 = v0_4;
+                        if (v11_9 != null) {
+                            try {
+                                v11_9.close();
+                            } catch (Throwable v0_5) {
+                                v5_3.addSuppressed(v0_5);
+                            }
+                        }
+                        throw v5_3;
+                    }
+                    try {
+                        byte[] v13_1 = new byte[65536];
+                    } catch (Throwable v0_2) {
+                        Throwable v5_2 = v0_2;
+                        try {
+                            v12_2.close();
+                        } catch (Throwable v0_3) {
+                            v5_2.addSuppressed(v0_3);
+                        }
+                        throw v5_2;
+                    }
+                    while(true) {
+                        int v14 = v11_9.read(v13_1);
+                        if (v14 <= 0) {
+                            break;
+                        }
+                        v12_2.write(v13_1, 0, v14);
+                    }
+                    v12_2.close();
+                    if (v11_9 != null) {
+                        v11_9.close();
+                    }
+                }
+                v5_1++;
+            }
+            return p18;
+        } else {
+            return p18;
+        }
+    }
+
+    private void drop()
+    {
+        if (this.rec != null) {
+            try {
+                this.rec.cancel();
+                this.rec.destroy();
+            } catch (RuntimeException v0) {
+            }
+        }
+        this.rec = 0;
+        this.recId = 0;
+        return;
+    }
+
+    private boolean has(String p2)
+    {
+        int v0_1;
+        if (this.checkSelfPermission(p2) != 0) {
+            v0_1 = 0;
+        } else {
+            v0_1 = 1;
+        }
+        return v0_1;
+    }
+
+    static synthetic void lambda$clipGet$9(String[] p5, java.util.concurrent.CountDownLatch p6)
+    {
+        try {
+            android.content.ClipData v1_1 = ((android.content.ClipboardManager) labs.ananta.chandra.MainActivity.app.getSystemService("clipboard")).getPrimaryClip();
+        } catch (Throwable v0_1) {
+            p6.countDown();
+            throw v0_1;
+        }
+        if ((v1_1 != null) && (v1_1.getItemCount() > 0)) {
+            p5[0] = String.valueOf(v1_1.getItemAt(0).coerceToText(labs.ananta.chandra.MainActivity.app));
+        }
+        p6.countDown();
+        return;
+    }
+
+    static synthetic void lambda$clipSet$10(String p2)
+    {
+        ((android.content.ClipboardManager) labs.ananta.chandra.MainActivity.app.getSystemService("clipboard")).setPrimaryClip(android.content.ClipData.newPlainText("Chandra", p2));
+        return;
+    }
+
+    private synthetic void lambda$micBlocked$3(android.content.DialogInterface p6, int p7)
+    {
+        try {
+            this.startActivity(new android.content.Intent("android.settings.APPLICATION_DETAILS_SETTINGS", android.net.Uri.fromParts("package", this.getPackageName(), 0)));
+        } catch (android.content.ActivityNotFoundException v0) {
+        }
+        return;
+    }
+
+    static synthetic void lambda$openExternal$8(String p3)
+    {
+        android.widget.Toast.makeText(labs.ananta.chandra.MainActivity.app, new StringBuilder().append("No app can open ").append(p3).toString(), 0).show();
+        return;
+    }
+
+    private synthetic void lambda$srEvent$7(String p3)
+    {
+        if (this.web != null) {
+            this.web.evaluateJavascript(p3, 0);
+        }
+        return;
+    }
+
+    private synthetic void lambda$startHost$0(String p2)
+    {
+        this.web.loadUrl(p2);
+        return;
+    }
+
+    private synthetic void lambda$startHost$1(String p7)
+    {
+        this.web.loadDataWithBaseURL(0, new StringBuilder().append("<body style=\'background:#030304;color:#c9c9cf;font:15px sans-serif;padding:24px\'><h3>Chandra could not start</h3><pre style=\'white-space:pre-wrap\'>").append(android.text.TextUtils.htmlEncode(p7)).append("</pre></body>").toString(), "text/html", "utf-8", 0);
+        return;
+    }
+
+    private synthetic void lambda$startHost$2()
+    {
+        try {
+            if (com.chaquo.python.Python.isStarted()) {
+                java.io.File v0_2 = this.copyAssets("chandra", new java.io.File(this.getFilesDir(), "chandra-app"));
+                java.io.File v1_3 = new java.io.File(this.getFilesDir(), "Chandra");
+                v1_3.mkdirs();
+                String v3_4 = com.chaquo.python.Python.getInstance().getModule("android_main").callAttr("start", new Object[] {v1_3.getAbsolutePath(), v0_2.getAbsolutePath()})).toString();
+                android.net.Uri v4_2 = android.net.Uri.parse(v3_4);
+                this.appOrigin = new StringBuilder().append(v4_2.getScheme()).append("://").append(v4_2.getHost()).append(":").append(v4_2.getPort()).toString();
+                this.runOnUiThread(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda9(this, v3_4));
+            } else {
+                com.chaquo.python.Python.start(new com.chaquo.python.android.AndroidPlatform(this));
+            }
+        } catch (java.io.File v0_5) {
+            this.runOnUiThread(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda10(this, String.valueOf(v0_5)));
+        }
+        return;
+    }
+
+    private synthetic void lambda$startTts$4(String p4)
+    {
+        this.web.evaluateJavascript(new StringBuilder().append("window.__chandraVoices&&__chandraVoices(").append(p4).append(")").toString(), 0);
+        return;
+    }
+
+    private synthetic void lambda$startTts$5(int p3)
+    {
+        String v0_0;
+        if (p3 != 0) {
+            v0_0 = 0;
+        } else {
+            v0_0 = 1;
+        }
+        this.ttsReady = v0_0;
+        if (this.ttsReady) {
+            this.tts.setOnUtteranceProgressListener(new labs.ananta.chandra.MainActivity$3(this));
+            this.runOnUiThread(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda7(this, this.voicesJson()));
+            return;
+        } else {
+            return;
+        }
+    }
+
+    private synthetic void lambda$ttsEvent$6(String p3)
+    {
+        this.web.evaluateJavascript(p3, 0);
+        return;
+    }
+
+    private void listenNow()
+    {
+        String v0 = this.waitId;
+        android.content.Intent v1 = this.waitIntent;
+        this.waitId = 0;
+        this.waitIntent = 0;
+        if (v0 != null) {
+            try {
+                this.rec = android.speech.SpeechRecognizer.createSpeechRecognizer(this);
+                this.recId = v0;
+                this.rec.setRecognitionListener(new labs.ananta.chandra.MainActivity$Listener(this, v0, v1.getStringExtra("android.speech.extra.LANGUAGE")));
+                this.rec.startListening(v1);
+            } catch (RuntimeException v3) {
+                this.drop();
+                this.srEvent(v0, "error", "audio-capture");
+                this.srEvent(v0, "end", 0);
+            }
+            return;
+        } else {
+            return;
+        }
+    }
+
+    private void micBlocked()
+    {
+        if (!this.shouldShowRequestPermissionRationale("android.permission.RECORD_AUDIO")) {
+            long v0_2 = System.currentTimeMillis();
+            if (((v0_2 - this.micDialogAt) >= 10000) && (!this.isFinishing())) {
+                this.micDialogAt = v0_2;
+                new android.app.AlertDialog$Builder(this).setTitle("Microphone is off for Chandra").setMessage("Android is blocking the microphone for Chandra. Turn it on in Settings > Permissions > Microphone, then tap the mic again.").setPositiveButton("Open settings", new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda1(this)).setNegativeButton("Not now", 0).show();
+                return;
+            } else {
+                return;
+            }
+        } else {
+            return;
+        }
+    }
+
+    public static boolean openApp(String p11)
+    {
+        android.content.pm.PackageManager v0_1 = labs.ananta.chandra.MainActivity.app.getPackageManager();
+        java.util.List v3 = v0_1.queryIntentActivities(new android.content.Intent("android.intent.action.MAIN").addCategory("android.intent.category.LAUNCHER"), 0);
+        String v4_2 = p11.toLowerCase(java.util.Locale.ROOT).trim();
+        android.content.Intent v5 = 0;
+        android.content.Intent v6_0 = v3.iterator();
+        while (v6_0.hasNext()) {
+            android.content.Intent v7_2 = ((android.content.pm.ResolveInfo) v6_0.next());
+            String v8_2 = String.valueOf(v7_2.loadLabel(v0_1)).toLowerCase(java.util.Locale.ROOT);
+            if (!v8_2.equals(v4_2)) {
+                if ((v5 == null) && ((v8_2.contains(v4_2)) || (v7_2.activityInfo.packageName.toLowerCase(java.util.Locale.ROOT).contains(v4_2)))) {
+                    v5 = v7_2;
+                }
+            } else {
+                v5 = v7_2;
+                break;
+            }
+        }
+        if (v5 != null) {
+            android.content.Intent v6_3 = v0_1.getLaunchIntentForPackage(v5.activityInfo.packageName);
+            if (v6_3 != null) {
+                labs.ananta.chandra.MainActivity.app.startActivity(v6_3.addFlags(268435456));
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public static void openExternal(String p4)
+    {
+        try {
+            labs.ananta.chandra.MainActivity.app.startActivity(new android.content.Intent("android.intent.action.VIEW", android.net.Uri.parse(p4)).addFlags(268435456));
+        } catch (android.content.ActivityNotFoundException v1) {
+            labs.ananta.chandra.MainActivity.MAIN.post(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda2(p4));
+        }
+        return;
+    }
+
+    private void srEnd()
+    {
+        if (this.waitId != null) {
+            String v0_2 = this.waitId;
+            this.waitId = 0;
+            this.waitIntent = 0;
+            this.srEvent(v0_2, "end", 0);
+        }
+        if (this.rec != null) {
+            String v0_1 = this.recId;
+            this.drop();
+            this.srEvent(v0_1, "end", 0);
+        }
+        return;
+    }
+
+    private static String srError(int p1)
+    {
+        switch (p1) {
+            case 1:
+            case 2:
+            case 4:
+            case 10:
+            case 11:
+                return "network";
+            case 3:
+                return "audio-capture";
+            case 5:
+            case 8:
+            default:
+                return "aborted";
+            case 6:
+            case 7:
+                return "no-speech";
+            case 9:
+                return "not-allowed";
+            case 12:
+            case 13:
+                return "language-not-supported";
+        }
+    }
+
+    private void srEvent(String p4, String p5, String p6)
+    {
+        String v1_3;
+        String v0_4 = new StringBuilder().append("window.__chandraSr&&__chandraSr(").append(org.json.JSONObject.quote(p4)).append(",").append(org.json.JSONObject.quote(p5)).append(",");
+        if (p6 != null) {
+            if (!p6.startsWith("{")) {
+                v1_3 = org.json.JSONObject.quote(p6);
+            } else {
+                v1_3 = p6;
+            }
+        } else {
+            v1_3 = "null";
+        }
+        this.runOnUiThread(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda0(this, v0_4.append(v1_3).append(")").toString()));
+        return;
+    }
+
+    private void srStart(String p5, String p6, boolean p7, int p8)
+    {
+        this.srEnd();
+        if (android.speech.SpeechRecognizer.isRecognitionAvailable(this)) {
+            String v0_7 = new android.content.Intent("android.speech.action.RECOGNIZE_SPEECH");
+            v0_7.putExtra("android.speech.extra.LANGUAGE_MODEL", "free_form");
+            v0_7.putExtra("android.speech.extra.PARTIAL_RESULTS", p7);
+            v0_7.putExtra("android.speech.extra.MAX_RESULTS", Math.max(1, p8));
+            v0_7.putExtra("calling_package", this.getPackageName());
+            if ((!p6.isEmpty()) && (!this.badLangs.contains(p6))) {
+                v0_7.putExtra("android.speech.extra.LANGUAGE", p6);
+            }
+            this.waitId = p5;
+            this.waitIntent = v0_7;
+            if (this.has("android.permission.RECORD_AUDIO")) {
+                if (!this.paused) {
+                    this.listenNow();
+                }
+            } else {
+                this.askMic();
+            }
+            return;
+        } else {
+            if (!this.noRecToast) {
+                this.noRecToast = 1;
+                android.widget.Toast.makeText(this, "This phone has no speech recogniser. Add a Gemini key in Options > AI brain to talk to Chandra.", 1).show();
+            }
+            this.srEvent(p5, "error", "service-not-allowed");
+            this.srEvent(p5, "end", 0);
+            return;
+        }
+    }
+
+    private void startHost()
+    {
+        new Thread(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda8(this), "chandra-start").start();
+        return;
+    }
+
+    private void startTts()
+    {
+        this.tts = new android.speech.tts.TextToSpeech(this, new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda4(this));
+        return;
+    }
+
+    private void ttsEvent(String p3, String p4)
+    {
+        this.runOnUiThread(new labs.ananta.chandra.MainActivity$$ExternalSyntheticLambda3(this, new StringBuilder().append("window.__chandraTts&&__chandraTts(").append(org.json.JSONObject.quote(p3)).append(",").append(org.json.JSONObject.quote(p4)).append(")").toString()));
+        return;
+    }
+
+    private String voicesJson()
+    {
+        org.json.JSONArray v0_1 = new org.json.JSONArray();
+        try {
+            String v1_1 = this.tts.getDefaultVoice();
+            java.util.Iterator v2_2 = this.tts.getVoices().iterator();
+        } catch (String v1) {
+            return v0_1.toString();
+        }
+        while (v2_2.hasNext()) {
+            android.speech.tts.Voice v3_2 = ((android.speech.tts.Voice) v2_2.next());
+            if ((!v3_2.isNetworkConnectionRequired()) || (!v3_2.getFeatures().contains("notInstalled"))) {
+                int v6_5;
+                org.json.JSONObject v4_4 = new org.json.JSONObject();
+                v4_4.put("name", v3_2.getName());
+                v4_4.put("lang", v3_2.getLocale().toLanguageTag());
+                if ((v1_1 == null) || (!v1_1.getName().equals(v3_2.getName()))) {
+                    v6_5 = 0;
+                } else {
+                    v6_5 = 1;
+                }
+                v4_4.put("def", v6_5);
+                v0_1.put(v4_4);
+            } else {
+            }
+        }
+        return v0_1.toString();
+    }
+
+    protected void onActivityResult(int p5, int p6, android.content.Intent p7)
+    {
+        if ((p5 == 41) && (this.fileCallback != null)) {
+            android.net.Uri[] v0_2 = 0;
+            if ((p6 == -1) && (p7 != null)) {
+                if (p7.getClipData() == null) {
+                    if (p7.getData() != null) {
+                        android.net.Uri[] v1_2 = new android.net.Uri[1];
+                        v1_2[0] = p7.getData();
+                        v0_2 = v1_2;
+                    }
+                } else {
+                    android.net.Uri[] v1_3 = p7.getClipData();
+                    v0_2 = new android.net.Uri[v1_3.getItemCount()];
+                    int v2_2 = 0;
+                    while (v2_2 < v1_3.getItemCount()) {
+                        v0_2[v2_2] = v1_3.getItemAt(v2_2).getUri();
+                        v2_2++;
+                    }
+                }
+            }
+            this.fileCallback.onReceiveValue(v0_2);
+            this.fileCallback = 0;
+            return;
+        } else {
+            super.onActivityResult(p5, p6, p7);
+            return;
+        }
+    }
+
+    public void onBackPressed()
+    {
+        if ((this.web == null) || (!this.web.canGoBack())) {
+            this.moveTaskToBack(1);
+        } else {
+            this.web.goBack();
+        }
+        return;
+    }
+
+    protected void onCreate(android.os.Bundle p6)
+    {
+        android.webkit.WebSettings v0_0;
+        super.onCreate(p6);
+        labs.ananta.chandra.MainActivity.app = this.getApplicationContext();
+        if ((this.getApplicationInfo().flags & 2) == 0) {
+            v0_0 = 0;
+        } else {
+            v0_0 = 1;
+        }
+        android.webkit.WebView.setWebContentsDebuggingEnabled(v0_0);
+        this.web = new android.webkit.WebView(this);
+        this.web.setBackgroundColor(android.graphics.Color.rgb(3, 3, 4));
+        android.webkit.WebSettings v0_6 = this.web.getSettings();
+        v0_6.setJavaScriptEnabled(1);
+        v0_6.setDomStorageEnabled(1);
+        v0_6.setDatabaseEnabled(1);
+        v0_6.setMediaPlaybackRequiresUserGesture(0);
+        v0_6.setAllowFileAccess(0);
+        v0_6.setCacheMode(-1);
+        v0_6.setGeolocationEnabled(1);
+        v0_6.setTextZoom(100);
+        this.web.addJavascriptInterface(new labs.ananta.chandra.MainActivity$Bridge(this, 0), "ChandraAndroid");
+        this.web.setWebViewClient(new labs.ananta.chandra.MainActivity$1(this));
+        this.web.setWebChromeClient(new labs.ananta.chandra.MainActivity$2(this));
+        this.setContentView(this.web);
+        this.startTts();
+        this.startHost();
+        return;
+    }
+
+    protected void onDestroy()
+    {
+        this.drop();
+        if (this.tts != null) {
+            this.tts.shutdown();
+        }
+        if (this.web != null) {
+            this.web.destroy();
+        }
+        super.onDestroy();
+        return;
+    }
+
+    protected void onPause()
+    {
+        super.onPause();
+        this.paused = 1;
+        if (this.rec != null) {
+            android.webkit.WebView v0_4 = this.recId;
+            this.drop();
+            this.srEvent(v0_4, "end", 0);
+        }
+        if (this.web != null) {
+            this.web.onPause();
+        }
+        return;
+    }
+
+    public void onRequestPermissionsResult(int p7, String[] p8, int[] p9)
+    {
+        if ((p9.length <= 0) || (p9[0] != 0)) {
+            int v0_2 = 0;
+        } else {
+            v0_2 = 1;
+        }
+        if (p7 != 42) {
+            if ((p7 != 43) || (this.geoCallback == null)) {
+            } else {
+                this.geoCallback.invoke(this.geoOrigin, v0_2, 0);
+                this.geoCallback = 0;
+            }
+        } else {
+            this.micAsking = 0;
+            java.util.ArrayList v1_2 = new java.util.ArrayList(this.micRequests);
+            this.micRequests.clear();
+            String v2_5 = v1_2.iterator();
+            while (v2_5.hasNext()) {
+                String v4_5 = ((android.webkit.PermissionRequest) v2_5.next());
+                if (v0_2 == 0) {
+                    v4_5.deny();
+                } else {
+                    try {
+                        v4_5.grant(labs.ananta.chandra.MainActivity.MIC_ONLY);
+                    } catch (String v5) {
+                    }
+                }
+            }
+            if (this.waitId != null) {
+                if (v0_2 == 0) {
+                    String v2_7 = this.waitId;
+                    this.waitId = 0;
+                    this.waitIntent = 0;
+                    this.srEvent(v2_7, "error", "not-allowed");
+                    this.srEvent(v2_7, "end", 0);
+                } else {
+                    if (!this.paused) {
+                        this.listenNow();
+                    }
+                }
+            }
+            if (v0_2 != 0) {
+            } else {
+                this.micBlocked();
+            }
+        }
+        return;
+    }
+
+    protected void onResume()
+    {
+        super.onResume();
+        this.paused = 0;
+        if (this.web != null) {
+            this.web.onResume();
+        }
+        if ((this.waitId != null) && (this.has("android.permission.RECORD_AUDIO"))) {
+            this.listenNow();
+        }
+        return;
+    }
+}

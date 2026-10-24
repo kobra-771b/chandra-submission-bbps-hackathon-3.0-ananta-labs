@@ -1,0 +1,16 @@
+package labs.ananta.chandra;
+public final synthetic class MainActivity$$ExternalSyntheticLambda4 implements android.speech.tts.TextToSpeech$OnInitListener {
+    public final synthetic labs.ananta.chandra.MainActivity f$0;
+
+    public synthetic MainActivity$$ExternalSyntheticLambda4(labs.ananta.chandra.MainActivity p1)
+    {
+        this.f$0 = p1;
+        return;
+    }
+
+    public final void onInit(int p2)
+    {
+        labs.ananta.chandra.MainActivity.$r8$lambda$AI8whVK84jsyST6V0gEuhvufxXA(this.f$0, p2);
+        return;
+    }
+}

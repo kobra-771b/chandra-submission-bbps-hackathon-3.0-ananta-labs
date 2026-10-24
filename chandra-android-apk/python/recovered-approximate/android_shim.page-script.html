@@ -1,0 +1,63 @@
+<script data-src="android-shim">(function(){
+var A=window.ChandraAndroid;if(!A)return;window.CHANDRA_ANDROID=true;
+var click=HTMLAnchorElement.prototype.click;
+HTMLAnchorElement.prototype.click=function(){
+  var h=this.href||"",name=this.getAttribute("download");
+  if(name!==null&&/^(blob:|data:)/.test(h)){
+    fetch(h).then(function(r){return r.blob()}).then(function(b){
+      var fr=new FileReader();fr.onload=function(){var s=String(fr.result);A.saveFile(name||"download",b.type||"application/octet-stream",s.slice(s.indexOf(",")+1))};fr.readAsDataURL(b)
+    }).catch(function(e){A.toast("Could not save "+(name||"the file"))});return
+  }
+  return click.apply(this,arguments)
+};
+var voices=[],pending={},seq=0,ls={};
+function fire(t){(ls[t]||[]).forEach(function(f){try{f({type:t})}catch(_){}});var h=syn["on"+t];if(h)try{h({type:t})}catch(_){}}
+function done(u,ev){var h=ev==="error"?(u.onerror||u.onend):u.onend;if(h)try{h({type:ev,utterance:u,error:ev==="error"?"synthesis-failed":undefined})}catch(_){}}
+var syn={speaking:false,pending:false,paused:false,onvoiceschanged:null,
+  getVoices:function(){return voices.slice()},
+  speak:function(u){var id="u"+(++seq);pending[id]=u;syn.speaking=true;
+    A.ttsSpeak(id,String(u.text||""),(u.voice&&u.voice.name)||"",String(u.lang||""),+u.rate||1,+u.pitch||1,u.volume==null?1:+u.volume)},
+  cancel:function(){var p=pending;pending={};syn.speaking=false;A.ttsStop();Object.keys(p).forEach(function(k){setTimeout(function(){done(p[k],"end")},0)})},
+  pause:function(){},resume:function(){},
+  addEventListener:function(t,f){(ls[t]=ls[t]||[]).push(f)},
+  removeEventListener:function(t,f){ls[t]=(ls[t]||[]).filter(function(g){return g!==f})}};
+window.__chandraTts=function(id,ev){var u=pending[id];if(!u)return;
+  if(ev==="start"){if(u.onstart)try{u.onstart({type:"start",utterance:u})}catch(_){}return}
+  delete pending[id];syn.speaking=Object.keys(pending).length>0;done(u,ev)};
+window.__chandraVoices=function(list){voices=(list||[]).map(function(v){return{name:v.name,lang:v.lang,voiceURI:v.name,localService:true,"default":!!v.def}});fire("voiceschanged")};
+try{window.__chandraVoices(JSON.parse(A.ttsVoices()||"[]"))}catch(_){}
+try{Object.defineProperty(window,"speechSynthesis",{value:syn,configurable:true})}catch(_){window.speechSynthesis=syn}
+/* our own utterance: the native one refuses voices that are not the WebView's own */
+window.SpeechSynthesisUtterance=function(t){this.text=t||"";this.lang="";this.rate=1;this.pitch=1;this.volume=1;this.voice=null;this.onstart=this.onend=this.onerror=this.onboundary=null};
+/* speech in: the WebView's SpeechRecognition fails with "not-allowed" on Android, so recognition goes to Android's recogniser.
+   A session ends after each pause (the page starts the next one); after errors the next start waits longer, up to 15 s. */
+var recs={},rseq=0,fails=0,live=0,lastEnd=0;
+function arr(a){a.item=function(i){return a[i]};return a}
+function finish(r){var id=r._id;if(!id)return;delete recs[id];r._id=null;live=Math.max(0,live-1);lastEnd=Date.now();r._fire("end")}
+function SR(){this.lang="";this.continuous=false;this.interimResults=false;this.maxAlternatives=1;this._ls={};this._id=null;this._t=0;
+  this.onstart=this.onend=this.onerror=this.onresult=this.onnomatch=this.onaudiostart=this.onaudioend=this.onsoundstart=this.onsoundend=this.onspeechstart=this.onspeechend=null}
+SR.prototype.addEventListener=function(t,f){(this._ls[t]=this._ls[t]||[]).push(f)};
+SR.prototype.removeEventListener=function(t,f){this._ls[t]=(this._ls[t]||[]).filter(function(g){return g!==f})};
+SR.prototype._fire=function(t,e){var me=this;e=e||{};e.type=t;e.target=me;
+  (me._ls[t]||[]).slice().forEach(function(f){try{f.call(me,e)}catch(_){}});var h=me["on"+t];if(h)try{h.call(me,e)}catch(_){}};
+SR.prototype.start=function(){if(this._id)throw new DOMException("recognition has already started","InvalidStateError");
+  var me=this,id="r"+(++rseq),wait=fails?Math.min(15000,1000*Math.pow(2,fails-1)):0;me._id=id;me._res=[];recs[id]=me;live++;
+  me._t=setTimeout(function(){me._t=0;if(me._id===id)A.srStart(id,String(me.lang||""),!!me.interimResults,Math.max(1,+me.maxAlternatives||1))},wait)};
+SR.prototype.stop=function(){if(!this._id)return;if(this._t){var me=this;clearTimeout(me._t);me._t=0;setTimeout(function(){finish(me)},0);return}A.srStop(this._id)};
+SR.prototype.abort=function(){if(!this._id)return;if(this._t){var me=this;clearTimeout(me._t);me._t=0;setTimeout(function(){finish(me)},0);return}A.srAbort(this._id)};
+window.__chandraSr=function(id,ev,d){var r=recs[id];if(!r)return;
+  if(ev==="start"){r._fire("start");r._fire("audiostart");return}
+  if(ev==="result"){fails=0;var res=arr((d.alts||[]).map(function(a){return{transcript:String(a.t||""),confidence:+a.c||0}}));res.isFinal=!!d.final;
+    var L=r._res,i=L.length&&!L[L.length-1].isFinal?L.length-1:L.length;L[i]=res;r._fire("result",{resultIndex:i,results:arr(L.slice())});return}
+  if(ev==="error"){if(d!=="no-speech")fails++;r._fire("error",{error:d,message:""});return}
+  if(ev==="end"){finish(r);return}
+  r._fire(ev)};
+[["SpeechRecognition",SR],["webkitSpeechRecognition",SR]].forEach(function(p){try{Object.defineProperty(window,p[0],{value:p[1],configurable:true,writable:true})}catch(_){window[p[0]]=p[1]}});
+/* the WebView always answers "prompt" for the microphone, so the voice visualiser never opened it. While Android's recogniser
+   has the mic it still says "prompt": a second recording beside it would starve the recogniser */
+var P=navigator.permissions;
+if(P&&P.query){var q0=P.query.bind(P);P.query=function(d){
+  if(!d||d.name!=="microphone")return q0(d);
+  return new Promise(function(ok){setTimeout(function(){var st=String(A.micState());if(st==="granted"&&(live>0||Date.now()-lastEnd<1500))st="prompt";
+    ok({name:"microphone",state:st,onchange:null,addEventListener:function(){},removeEventListener:function(){}})},0)})}}
+})();</script>

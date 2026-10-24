@@ -1,0 +1,9 @@
+package labs.ananta.chandra;
+public final class R$style {
+    public static int AppTheme = 2130968576;
+
+    private R$style()
+    {
+        return;
+    }
+}

@@ -1,0 +1,101 @@
+package labs.ananta.chandra;
+ class MainActivity$2 extends android.webkit.WebChromeClient {
+    final synthetic labs.ananta.chandra.MainActivity this$0;
+
+    public static synthetic void $r8$lambda$ZyGR_ebbtARkVLfxZu5BPHAU9ng(labs.ananta.chandra.MainActivity$2 p0, android.webkit.PermissionRequest p1)
+    {
+        p0.lambda$onPermissionRequestCanceled$1(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$gx-vENiQYKlE7yrk3ZN6kUM0qpw(labs.ananta.chandra.MainActivity$2 p0, android.webkit.PermissionRequest p1)
+    {
+        p0.lambda$onPermissionRequest$0(p1);
+        return;
+    }
+
+    MainActivity$2(labs.ananta.chandra.MainActivity p1)
+    {
+        this.this$0 = p1;
+        return;
+    }
+
+    private synthetic void lambda$onPermissionRequest$0(android.webkit.PermissionRequest p4)
+    {
+        if ((java.util.Arrays.asList(p4.getResources()).contains("android.webkit.resource.AUDIO_CAPTURE")) && (p4.getOrigin().toString().startsWith(labs.ananta.chandra.MainActivity.-$$Nest$fgetappOrigin(this.this$0)))) {
+            if (!labs.ananta.chandra.MainActivity.-$$Nest$mhas(this.this$0, "android.permission.RECORD_AUDIO")) {
+                labs.ananta.chandra.MainActivity.-$$Nest$fgetmicRequests(this.this$0).add(p4);
+                labs.ananta.chandra.MainActivity.-$$Nest$maskMic(this.this$0);
+                return;
+            } else {
+                p4.grant(labs.ananta.chandra.MainActivity.-$$Nest$sfgetMIC_ONLY());
+                return;
+            }
+        } else {
+            p4.deny();
+            return;
+        }
+    }
+
+    private synthetic void lambda$onPermissionRequestCanceled$1(android.webkit.PermissionRequest p2)
+    {
+        labs.ananta.chandra.MainActivity.-$$Nest$fgetmicRequests(this.this$0).remove(p2);
+        return;
+    }
+
+    public void onGeolocationPermissionsShowPrompt(String p5, android.webkit.GeolocationPermissions$Callback p6)
+    {
+        if (p5.startsWith(labs.ananta.chandra.MainActivity.-$$Nest$fgetappOrigin(this.this$0))) {
+            if (!labs.ananta.chandra.MainActivity.-$$Nest$mhas(this.this$0, "android.permission.ACCESS_COARSE_LOCATION")) {
+                labs.ananta.chandra.MainActivity.-$$Nest$fputgeoOrigin(this.this$0, p5);
+                labs.ananta.chandra.MainActivity.-$$Nest$fputgeoCallback(this.this$0, p6);
+                labs.ananta.chandra.MainActivity v0_4 = this.this$0;
+                String[] v3_1 = new String[1];
+                v3_1[0] = "android.permission.ACCESS_COARSE_LOCATION";
+                v0_4.requestPermissions(v3_1, 43);
+                return;
+            } else {
+                p6.invoke(p5, 1, 0);
+                return;
+            }
+        } else {
+            p6.invoke(p5, 0, 0);
+            return;
+        }
+    }
+
+    public void onPermissionRequest(android.webkit.PermissionRequest p3)
+    {
+        this.this$0.runOnUiThread(new labs.ananta.chandra.MainActivity$2$$ExternalSyntheticLambda0(this, p3));
+        return;
+    }
+
+    public void onPermissionRequestCanceled(android.webkit.PermissionRequest p3)
+    {
+        this.this$0.runOnUiThread(new labs.ananta.chandra.MainActivity$2$$ExternalSyntheticLambda1(this, p3));
+        return;
+    }
+
+    public boolean onShowFileChooser(android.webkit.WebView p6, android.webkit.ValueCallback p7, android.webkit.WebChromeClient$FileChooserParams p8)
+    {
+        if (labs.ananta.chandra.MainActivity.-$$Nest$fgetfileCallback(this.this$0) != null) {
+            labs.ananta.chandra.MainActivity.-$$Nest$fgetfileCallback(this.this$0).onReceiveValue(0);
+        }
+        labs.ananta.chandra.MainActivity.-$$Nest$fputfileCallback(this.this$0, p7);
+        android.content.Intent v0_1 = p8.createIntent();
+        v0_1.addCategory("android.intent.category.OPENABLE");
+        if (p8.getMode() == 1) {
+            v0_1.putExtra("android.intent.extra.ALLOW_MULTIPLE", 1);
+        }
+        if ((v0_1.getType() == null) || ((v0_1.getType().isEmpty()) || (v0_1.getType().contains(".")))) {
+            v0_1.setType("*/*");
+        }
+        try {
+            this.this$0.startActivityForResult(v0_1, 41);
+            return 1;
+        } catch (android.content.ActivityNotFoundException v2) {
+            labs.ananta.chandra.MainActivity.-$$Nest$fputfileCallback(this.this$0, 0);
+            return 0;
+        }
+    }
+}

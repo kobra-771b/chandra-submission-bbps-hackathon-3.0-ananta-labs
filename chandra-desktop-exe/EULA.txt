@@ -1,0 +1,91 @@
+CHANDRA END USER LICENCE AGREEMENT
+Ananta Labs · Version 1.0 · Please read this agreement carefully before you install Chandra.
+
+
+1. AGREEMENT
+
+This End User Licence Agreement (the “Agreement”) is a legal agreement between you (“you”) and Ananta Labs (“Ananta Labs”, “we”, “us”) for the Chandra software, including Chandra Desktop, Chandra Setup, the bundled Python runtime, the Chandra Engine bridge, the interface, the voice and listening features, the documentation and any updates we provide (together, “Chandra”).
+
+By clicking “Install”, by installing Chandra, or by using it, you confirm that you have read this Agreement, that you understand it, and that you accept it. If you do not accept it, click “Decline” and do not install or use Chandra. If you accept on behalf of an organisation, you confirm that you have the authority to bind that organisation.
+
+2. LICENCE
+
+Subject to this Agreement, Ananta Labs grants you a personal, non-exclusive, non-transferable, revocable licence to install and use Chandra on computers that you own or control, for your own personal or internal business use.
+
+Chandra is licensed, not sold. Ananta Labs and its licensors keep all rights in Chandra that this Agreement does not expressly give you.
+
+3. WHAT YOU MAY NOT DO
+
+You may not (a) copy, modify, translate or create derivative works of Chandra, except as the licences of its open-source components allow; (b) sell, rent, lease, sublicense, publish or otherwise make Chandra available to anyone else; (c) reverse engineer, decompile or disassemble Chandra, or try to extract its source code, except to the extent the law gives you that right despite this restriction; (d) remove or change any notice of ownership or any licence notice; (e) use Chandra to break the law, to harm anyone, to monitor or record other people without their lawful consent, or to attack, probe or overload any system; or (f) use Chandra in any way that breaches the terms of the AI and online services it connects to.
+
+4. COMPUTER CONTROL AND AUTOMATION
+
+Chandra can look at your screen, move the mouse, type, open applications and pages, read and write files, run tools, and take other actions on your computer when you ask it to. Chandra asks you before actions that could change, delete, send or pay for something, and it refuses a short list of harmful actions. These safeguards reduce risk; they do not remove it.
+
+You are responsible for what you ask Chandra to do and for approving or refusing what it proposes. Review what Chandra shows you before you approve it. Keep backups of anything you cannot afford to lose. Chandra’s actions are carried out with your Windows account’s permissions.
+
+5. AI SERVICES, API KEYS AND COSTS
+
+Chandra does its thinking with AI services run by other companies, currently Anthropic (Claude) and Google (Gemini), or with a local engine on your computer. Chandra uses the API keys stored on your computer to talk to those services. Your use of them is subject to their terms, and any charges they make are between you and them.
+
+A setup file that carries API keys inside it (a “personal setup”) lets anyone who holds the file read those keys. Keep personal setups to your own computers and never share them. Ananta Labs is not responsible for any use of keys that you place in, or receive with, Chandra.
+
+6. PRIVACY AND YOUR DATA
+
+Chandra uses your microphone only while you are talking to it (when you tap the moon, hold Space, or use the microphone button); it does not listen in the background, and it does not start by itself. Chandra keeps your settings, chats, memory, artifacts, logs and keys on your computer, in your Windows user profile (the Chandra folder under AppData). Ananta Labs does not collect your content, does not add analytics or telemetry to Chandra, and does not receive your data through Chandra.
+
+Some features send information to other services when you use them: what you type, say, or share with Chandra, and, when you ask Chandra to look at your screen, an image of it, go to the AI service you have chosen; speech goes to Google Gemini for transcription and voice; location lookups use your approximate network location or your device location and contact services such as ipwho.is, Open-Meteo and BigDataCloud; weather, dictionary, Wikipedia, currency and similar skills contact their public services. Those services handle your information under their own terms and privacy policies.
+
+The Diagnostics page can create a report with keys and tokens removed. It stays on your computer until you copy it and choose to share it. “Clear all history” in Options removes chats, recents, activity and logs from your computer.
+
+7. THIRD-PARTY SOFTWARE AND SERVICES
+
+Chandra includes software from others under their own licences, including Python, pywebview and Microsoft Edge WebView2, KaTeX (MIT), the LZMA SDK (public domain), SF Pro type, and ports of React Bits components by David Haz (MIT with the Commons Clause, used here as part of an application). Their notices are in THIRD-PARTY-NOTICES.md in your Chandra folder, and nothing in this Agreement limits your rights under those licences.
+
+Chandra relies on services that Ananta Labs does not control. They may change, become unavailable or be discontinued at any time, and Chandra’s features that depend on them may stop working.
+
+8. AI ANSWERS CAN BE WRONG
+
+Chandra’s answers, translations, summaries, code and actions are produced by AI models and can be incorrect, incomplete, out of date or unsuitable. Chandra is not a substitute for professional medical, legal, financial or safety advice. Check anything important yourself before you rely on it.
+
+9. UPDATES
+
+Ananta Labs may provide updates that change, add or remove features. An update replaces the version you have, and installing a new version of Chandra may close a copy that is running. Updates are part of Chandra and are covered by this Agreement unless they come with their own terms.
+
+10. OWNERSHIP AND FEEDBACK
+
+Chandra, its name, its mark and its design are owned by Ananta Labs and its licensors and are protected by copyright and other laws. This Agreement gives you no right to use the Chandra or Ananta Labs names or marks. What you create with Chandra is yours, subject to the terms of the services you use. If you send us feedback or ideas, you allow us to use them without payment or restriction.
+
+11. NO WARRANTY
+
+TO THE FULLEST EXTENT THE LAW ALLOWS, CHANDRA IS PROVIDED “AS IS” AND “AS AVAILABLE”, WITH ALL FAULTS, AND WITHOUT WARRANTY OF ANY KIND. ANANTA LABS DISCLAIMS ALL WARRANTIES, EXPRESS, IMPLIED OR STATUTORY, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, NON-INFRINGEMENT, AND THAT CHANDRA WILL BE UNINTERRUPTED, SECURE OR ERROR-FREE. THIS RELEASE HAS NOT BEEN VERIFIED ON EVERY WINDOWS COMPUTER, AND YOU INSTALL AND USE IT AT YOUR OWN RISK.
+
+12. LIMIT OF LIABILITY
+
+TO THE FULLEST EXTENT THE LAW ALLOWS, ANANTA LABS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY OR PUNITIVE DAMAGES, OR FOR LOSS OF DATA, PROFITS, REVENUE, GOODWILL OR USE, ARISING OUT OF OR RELATED TO CHANDRA OR THIS AGREEMENT, INCLUDING DAMAGE CAUSED BY ACTIONS CHANDRA TAKES ON YOUR COMPUTER OR BY THE SERVICES IT CONNECTS TO, EVEN IF WE HAVE BEEN ADVISED THAT IT IS POSSIBLE. OUR TOTAL LIABILITY FOR ALL CLAIMS RELATED TO CHANDRA WILL NOT EXCEED THE AMOUNT YOU PAID FOR IT, OR, IF YOU PAID NOTHING, ONE THOUSAND RUPEES (INR 1,000) OR ITS EQUIVALENT. SOME PLACES DO NOT ALLOW THESE LIMITS, AND THEN THEY APPLY ONLY AS FAR AS THE LAW PERMITS.
+
+13. YOUR RESPONSIBILITY
+
+You will use Chandra lawfully, and you will keep Ananta Labs harmless, to the extent the law allows, from claims by others that arise from your use of Chandra in breach of this Agreement or the law.
+
+14. ENDING THIS AGREEMENT
+
+This Agreement lasts until it ends. You can end it at any time by uninstalling Chandra and deleting its copies. It ends automatically if you break it. When it ends you must stop using Chandra and remove it. Sections 3, 4, 5, 8, 10, 11, 12, 13 and 15 to 17 survive.
+
+15. GOVERNING LAW
+
+This Agreement is governed by the laws of India, without regard to its conflict-of-law rules. The courts of India have exclusive jurisdiction over disputes about it, unless the law of the place where you live gives you a right to bring a claim elsewhere that cannot be waived.
+
+16. CHANGES TO THIS AGREEMENT
+
+We may update this Agreement for a new version of Chandra. The agreement shown during Setup for that version applies to it. If you do not accept a new version of the Agreement, do not install or use that version.
+
+17. GENERAL
+
+This is the whole agreement between you and Ananta Labs about Chandra and replaces earlier understandings about it. If any part is found unenforceable, the rest stays in force. If we do not enforce a right, that is not a waiver of it. You may not assign this Agreement; we may assign it to a successor. Headings are for convenience only.
+
+18. CONTACT
+
+Ananta Labs. Questions about this Agreement: through the contact details published with Chandra.
+
+By clicking “Install” you accept this Agreement.

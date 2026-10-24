@@ -3,19 +3,31 @@
 **Team / owner:** Ananta Labs
 **Copyright:** © 2026 Ananta Labs. All rights reserved. See [COPYRIGHTS.txt](COPYRIGHTS.txt) and [LICENSES.txt](LICENSES.txt).
 
-Chandra Link pairs a phone with a PC over the same Wi-Fi. There is no account and no cloud. The phone can ask Chandra a question, trigger PC actions (ping, lock, sleep, shut down, open a link, copy text, notify) and receive alerts back.
+**Chandra** is a personal intelligence by Ananta Labs: a voice-first assistant that talks, listens and works your computer with your approval for each task. It speaks English, Hindi and Hinglish, thinks with Claude, Gemini or a local engine, and keeps your data on your own device.
+
+This submission contains three parts:
+
+- **Chandra Desktop** for Windows 10 and 11 (the EXE).
+- **Chandra for Android** (the APK, `labs.ananta.chandra`).
+- **Chandra Link**, which pairs a phone with a PC over the same Wi-Fi, with no account and no cloud, to ask Chandra, trigger PC actions and receive alerts.
 
 ## Repository layout
 
 | Path | What it is |
 |---|---|
-| `source/chandra-link/` | Source code of the Chandra Link PC companion (Python, aiohttp), with its own README |
-| `dist/ChandraLink-PC.zip` | The same PC companion as shipped, as a single ZIP |
+| `chandra-desktop-exe/` | **Source of Chandra Desktop (Windows EXE)**, unpacked from `Chandra_v1.0.1-production-ready.exe`. Start at `PROVENANCE.md`, then `desktop/source/chandra.py` |
+| `chandra-android-apk/` | **Source of Chandra for Android (APK)**, recovered from `Chandra-v1.0.1-android.apk`. Start at `PROVENANCE.md` |
+| `chandra-link-pc/` | **Source of Chandra Link** (PC companion, Python), with its own README |
+| `dist/` | Shipped binaries: `ChandraLink-PC.zip`, `Chandra-v1.0.1-android.apk`, checksums |
 | `deck/` | Submission slide decks (static HTML), see below |
 | `tools/build_deck.py` | Generator for the decks (`python tools/build_deck.py`) |
 | `README.md`, `LICENSES.txt`, `COPYRIGHTS.txt` | Project, licensing and copyright notices |
 
-> The Chandra desktop (EXE) and Android (APK) application sources and their installers are submitted separately from the PC companion and are not part of this commit yet. They will be added under their own folders.
+The three source folders are kept separate on purpose. Each `PROVENANCE.md` states exactly where the files came from, how exact they are, and what was left out (third-party runtimes and one file with private keys).
+
+> **Binary not included:** `Chandra_v1.0.1-production-ready.exe` (Chandra Setup) is available at
+> https://github.com/kobrx7-god/chandra-full/releases/tag/exe (SHA-256 in `dist/SHA256SUMS.txt`).
+> It is not copied here because that build carries embedded API keys. See `dist/README.md`.
 
 ## Slide decks
 
@@ -37,11 +49,11 @@ Example: `deck/technology-stack/?lang=en-IN`. The language switcher on each page
 
 ## Run Chandra Link (Windows)
 
-1. Extract `dist/ChandraLink-PC.zip` (or use `source/chandra-link/`).
+1. Extract `dist/ChandraLink-PC.zip` (or use `chandra-link-pc/`).
 2. Double-click `start.bat`. First run creates a virtual environment and installs `aiohttp`, `segno` and `zeroconf`.
 3. Allow the firewall prompt for private networks, then scan the QR code on the PC page with the phone.
 
-Details and limits are in [`source/chandra-link/README.md`](source/chandra-link/README.md).
+Details and limits are in [`chandra-link-pc/README.md`](chandra-link-pc/README.md).
 
 ## Rebuild the decks
 

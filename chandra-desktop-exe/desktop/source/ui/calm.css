@@ -1,0 +1,177 @@
+/* ============ Calm (Chandra 1.6): less on screen, one light behind it ============
+   Loaded last. Follows what current AI-native and calm-technology work agrees on: content first and controls that
+   recede; depth from light rather than chrome (a slow aurora with grain, never neon); text on solid, quiet panels so
+   it stays legible over the glow; one ambient presence (the speaking light) instead of characters competing for
+   attention; motion only when Chandra is doing something. Nothing here changes what a control does. */
+
+/* ---------- the sky: the aurora canvas, and its CSS stand-in (Lite mode, no WebGL) ---------- */
+#sky.on { opacity: 1 !important; }      /* 1.4 dimmed the busy ASCII sky to a third; the aurora is calm enough to show */
+#sky .aurora-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#sky.aurora-fallback {
+  opacity: 1;
+  background:
+    radial-gradient(70% 38% at 30% 18%, rgba(61, 107, 255, .26), transparent 70%),
+    radial-gradient(60% 34% at 72% 26%, rgba(142, 140, 255, .18), transparent 70%),
+    radial-gradient(90% 40% at 50% 0%, rgba(168, 212, 255, .12), transparent 70%),
+    radial-gradient(140% 70% at 50% 135%, rgba(0, 0, 0, .95) 52%, rgba(120, 160, 255, .22) 53.2%, transparent 60%),
+    linear-gradient(180deg, #0a1430 0%, #040817 55%, #02040b 100%);
+}
+#sky.aurora-fallback::after {          /* fine grain, so the gradients never band */
+  content: ""; position: absolute; inset: 0; opacity: .07; mix-blend-mode: overlay; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* in Starlight the aurora is the only background: the older drawn layers step aside */
+html[data-skin=starlight] .aura, html[data-skin=starlight] #eclipse-orbit { opacity: 0 !important; visibility: hidden; }
+
+/* ---------- fewer things in the rail: the Daily moon, Event Horizon and the Focus duplicate go to the menu ---------- */
+#moon, #ehb, #fcb { display: none !important; }
+
+/* ---------- the home: one calm column ---------- */
+#hl, #hr, .vwrap, #vbar, .opill, #pills, #ciPulse, .ci-wrap, #home .ver, #home > .stars { display: none !important; }
+@media (min-width: 901px) {
+  #home.on {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto minmax(190px, 1fr) auto auto auto !important;
+    grid-template-areas: "head" "stat" "stage" "reply" "comp" "chips" !important;
+    max-width: 860px !important; gap: 12px 0 !important; min-height: calc(100vh - 64px) !important;
+  }
+  #home .stage { --s: min(230px, 28vh); }
+  #hstat { grid-area: stat; }
+  #qchips { grid-area: chips; }
+}
+#idle h1, #gr { letter-spacing: -.035em; font-weight: 400; }
+#idle p, #idle .mu { color: rgba(214, 224, 255, .62); }
+
+/* Screen sense, as one quiet line under the greeting */
+#hstat { display: flex; justify-content: center; min-height: 34px; }
+#hstat .watch {
+  display: flex !important; align-items: center; gap: 10px; width: auto !important; max-width: min(620px, 94%);
+  min-height: 0 !important; margin: 0 !important; padding: 5px 6px 5px 12px !important; border-radius: 999px !important;
+  background: rgba(5, 10, 28, .5) !important; box-shadow: inset 0 0 0 1px rgba(150, 180, 255, .13) !important;
+  backdrop-filter: blur(12px) saturate(120%); -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+#hstat .watch .wl { width: 18px; height: 18px; flex: none; }
+#hstat .watch .wl svg { width: 18px; height: 18px; }
+#hstat .watch .wm { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+#hstat .watch .wn { font-size: 12.5px; font-weight: 560; white-space: nowrap; color: #e8eeff; }
+#hstat .watch .wd { font-size: 12.5px; color: rgba(214, 224, 255, .6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px; }
+#hstat .watch .wbar { display: none; }
+#hstat .watch .chip { min-height: 26px !important; height: 26px; padding: 0 12px !important; font-size: 12px !important; flex: none; }
+body[data-watch=live] #hstat .watch .wl { animation: calmPulse 3.2s ease-in-out infinite; }
+@keyframes calmPulse { 50% { opacity: .55; } }
+
+/* quick prompts: quiet chips under the composer */
+#qchips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 2px; }
+.qchip {
+  display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px 0 11px; border-radius: 999px; border: 0;
+  background: rgba(8, 14, 36, .38); box-shadow: inset 0 0 0 1px rgba(150, 180, 255, .12); color: rgba(226, 234, 255, .78);
+  font: inherit; font-size: 13px; cursor: pointer; transition: background .2s, box-shadow .2s, color .2s, transform .2s;
+}
+.qchip .ic { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; opacity: .75; }
+.qchip:hover { background: rgba(26, 44, 110, .45); box-shadow: inset 0 0 0 1px rgba(168, 212, 255, .32); color: #f4f7ff; }
+.qchip:active { transform: scale(.97); }
+.qchip:focus-visible { outline: 2px solid rgba(168, 212, 255, .7); outline-offset: 2px; }
+
+/* ---------- surfaces: solid enough to read over the light, with a hairline and a soft top highlight ---------- */
+html[data-skin=starlight] .comp, html[data-skin=starlight] .reply-card, html[data-skin=starlight] .list.g,
+html[data-skin=starlight] .dev.g, html[data-skin=starlight] #thr {
+  background: linear-gradient(180deg, rgba(14, 22, 54, .62), rgba(6, 10, 28, .7)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), inset 0 0 0 1px rgba(150, 180, 255, .12), 0 24px 60px -30px rgba(0, 0, 0, .8) !important;
+  backdrop-filter: blur(18px) saturate(125%); -webkit-backdrop-filter: blur(18px) saturate(125%);
+}
+html[data-skin=starlight] .comp:focus-within {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), inset 0 0 0 1px rgba(168, 212, 255, .34), 0 0 0 4px rgba(61, 107, 255, .12), 0 24px 60px -30px rgba(0, 0, 0, .8) !important;
+}
+/* the liquid colour inside the glass stays, but quieter */
+html[data-skin=starlight] [data-liquid] canvas { opacity: .45 !important; }
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion: reduce) { body[data-watch=live] #hstat .watch .wl { animation: none; } }
+body.rm #hstat .watch .wl { animation: none !important; }
+
+/* ---------- the composer's small light: only while Chandra thinks or works (the big light covers listening and
+   speaking), smaller, and in the margin beside the reply rather than over it ---------- */
+.presence .orb { top: -54px !important; right: 4px !important; width: 50px !important; height: 50px !important;
+  opacity: 0; transform: scale(.7); transition: opacity .5s, transform .6s cubic-bezier(.2, .8, .2, 1); }
+.presence[data-phase=thinking] .orb, .presence[data-phase=working] .orb, .presence[data-phase=responding] .orb { opacity: 1; transform: none; }
+
+/* ============ Voice first (1.7): the moon is the talk button, captions carry the conversation ============ */
+@media (min-width: 901px) { #home .stage { --s: min(270px, 32vh); } }
+#home .stage { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+#home .stage:focus-visible .vring { opacity: .6; }
+.vring { position: absolute; left: 50%; top: 50%; width: calc(var(--s, 240px) * 1.18); height: calc(var(--s, 240px) * 1.18);
+  margin: calc(var(--s, 240px) * -.59) 0 0 calc(var(--s, 240px) * -.59); border-radius: 50%; pointer-events: none; opacity: 0; z-index: 2;
+  box-shadow: 0 0 0 1.5px rgba(168, 212, 255, .6), 0 0 46px 8px rgba(61, 107, 255, .32), inset 0 0 30px rgba(120, 160, 255, .18);
+  transform: scale(calc(.94 + var(--lvl, 0) * .3)); transition: opacity .35s ease; }
+#home[data-voice=listening] .vring { opacity: calc(.3 + var(--lvl, 0) * .8); }
+#home[data-voice=hearing] .vring { opacity: calc(.55 + var(--lvl, 0) * .45); }
+#home[data-voice=heard] .vring, #home[data-voice=thinking] .vring, #home[data-voice=working] .vring {
+  opacity: .55; transform: none; box-shadow: none; border: 1.5px solid transparent;
+  background: conic-gradient(from 0deg, transparent 0 70%, rgba(168, 212, 255, .85) 88%, transparent 100%) border-box;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)); mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  animation: vspin 1.4s linear infinite; }
+#home[data-voice=speaking] .vring { opacity: calc(.15 + var(--lvl, 0) * .55); box-shadow: 0 0 0 1.5px rgba(255, 240, 214, .5), 0 0 50px 10px rgba(255, 220, 170, .18); }
+@keyframes vspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .vring { animation: none !important; } }
+body.rm .vring { animation: none !important; }
+
+/* captions: what you said (small), what Chandra says (large, the sentence being spoken lit up) */
+#caps { display: none; text-align: center; margin: 2px auto 0; max-width: 720px; padding: 0 8px; }
+#caps.on { display: block; }
+#caps .cyou { font-size: 13.5px; color: rgba(214, 224, 255, .55); margin: 0 0 8px; }
+#caps .csay { font-size: clamp(19px, 2.2vw, 25px); line-height: 1.45; font-weight: 380; letter-spacing: -.01em; color: rgba(236, 242, 255, .5); margin: 0; }
+#caps .csay span { transition: color .35s, text-shadow .35s; }
+#caps .csay span.said { color: rgba(236, 242, 255, .86); }
+#caps .csay span.now { color: #f6f8ff; text-shadow: 0 0 26px rgba(120, 160, 255, .38); }
+html[data-skin] #jv.captioning:not(.asks) { background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+#jv.captioning:not(.asks) #jvh, #jv.captioning:not(.asks) #jvt { display: none; }
+
+/* English, Hindi or Hinglish, beside the Screen sense line */
+#hstat { gap: 10px; align-items: center; flex-wrap: wrap; }
+.langsw { display: inline-flex; padding: 3px; border-radius: 999px; background: rgba(5, 10, 28, .5); box-shadow: inset 0 0 0 1px rgba(150, 180, 255, .13); }
+.langsw button { border: 0; background: none; color: rgba(214, 224, 255, .62); font: inherit; font-size: 12.5px; height: 26px; min-width: 40px; padding: 0 10px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
+.langsw button[aria-checked=true] { background: rgba(61, 107, 255, .38); color: #f4f7ff; }
+.langsw button:focus-visible { outline: 2px solid rgba(168, 212, 255, .7); outline-offset: 1px; }
+
+/* typing is second: a quieter, narrower composer that wakes on hover or focus */
+@media (min-width: 901px) { #home .comp { width: min(640px, 100%) !important; } }
+#home .comp { opacity: .8; transition: opacity .25s; }
+#home .comp:hover, #home .comp:focus-within { opacity: 1; }
+#qchips .qlabel { align-self: center; font-size: 12.5px; color: rgba(214, 224, 255, .45); margin-right: 2px; }
+
+/* the conversation so far gets its own row above the reply; while captions carry a voice conversation it steps aside */
+@media (min-width: 901px) {
+  #home.on {
+    grid-template-rows: auto auto minmax(190px, 1fr) auto auto auto auto !important;
+    grid-template-areas: "head" "stat" "stage" "conv" "reply" "comp" "chips" !important;
+  }
+  #home #tx { grid-area: conv !important; max-height: 22vh !important; width: min(720px, 100%); justify-self: center; overflow: auto; }
+}
+#home:has(#jv.captioning.on) #tx { display: none !important; }
+
+/* 1.0: Nebula takes the whole stage, so the cloud matches the moon and its shell has room to ripple */
+#heroOrb:has(.nebula-canvas) { width: 100%; }
+
+/* ============ 1.0.7: plain messages, no glass blobs, much lighter on the GPU ============
+   Chandra's reply is text on the page, not a liquid-glass bubble. The chat thread is the same: your line, Chandra's line.
+   Blur layers over the moving sky were re-blurred on every frame (84 of them); they are gone, and panels are solid enough
+   to read without them. The liquid shader in the composer and the blob in the moon's place are off. */
+html body #jv, html[data-skin] #jv, html[data-skin] #jv.reply-card {
+  background: none !important; box-shadow: none !important; border: 0 !important; border-radius: 0 !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; padding: 6px 4px 2px !important; animation: none !important; }
+#jv::before, #jv::after { display: none !important; }
+html[data-skin] #jv.asks { background: rgba(10, 16, 40, .92) !important; border-radius: 18px !important; padding: 14px 18px !important;
+  box-shadow: inset 0 0 0 1px rgba(150, 180, 255, .2) !important; }
+#tx .cxq { align-self: flex-end; max-width: 80%; padding: 0 !important; border-radius: 0 !important; background: none !important;
+  color: rgba(214, 224, 255, .55); font-size: 13.5px; text-align: right; }
+#tx .cxa { align-self: flex-start; max-width: 100%; padding: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; }
+#tx .cxa b { font-weight: 420; }
+#tx { gap: 10px; }
+.liquid-cv, .liquid-fb::after { display: none !important; }
+html[data-skin=starlight] .comp { background: rgba(10, 16, 40, .9) !important; }
+html[data-skin] .g, html[data-skin] .btn, html[data-skin] .chip, html[data-skin] .pill, html[data-skin] .toast, html[data-skin] .sheet,
+html[data-skin] #nav, html[data-skin] #menu, html[data-skin] #thr, html[data-skin] .comp, html[data-skin] .reply-card, html[data-skin] .list.g,
+html[data-skin] #hstat .watch, html[data-skin] .langsw { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html[data-skin=starlight] .g:not(#jv):not(.comp) { background: rgba(10, 16, 40, .8) !important; }
+html[data-skin=starlight] .stars i, html[data-skin=starlight] .stars u { animation: none !important; }
+#hstat .watch .wl, .vring { will-change: auto; }

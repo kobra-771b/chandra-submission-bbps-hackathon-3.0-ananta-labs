@@ -3,10 +3,11 @@ COPYRIGHT NOTICE
 Copyright (c) 2026 Ananta Labs. All rights reserved.
 
 Owner: Ananta Labs
-Work:  "Chandra" and "Chandra Link", including the PC companion source code
-       (source/chandra-link/), the distributed archive (dist/), the submission
-       slide decks (deck/), the deck generator (tools/), and the
-       documentation in this repository.
+Work:  "Chandra" (Chandra Desktop, Chandra for Android) and "Chandra Link",
+       including the source in chandra-desktop-exe/, chandra-android-apk/ and
+       chandra-link-pc/, the distributed binaries (dist/), the submission slide
+       decks (deck/), the deck generator (tools/), and the documentation in
+       this repository.
 Submitted to: BBPS Hackathon 3.0
 
 1. Ownership

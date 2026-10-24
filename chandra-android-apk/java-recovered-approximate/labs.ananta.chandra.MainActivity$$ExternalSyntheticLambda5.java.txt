@@ -1,0 +1,16 @@
+package labs.ananta.chandra;
+public final synthetic class MainActivity$$ExternalSyntheticLambda5 implements java.lang.Runnable {
+    public final synthetic String f$0;
+
+    public synthetic MainActivity$$ExternalSyntheticLambda5(String p1)
+    {
+        this.f$0 = p1;
+        return;
+    }
+
+    public final void run()
+    {
+        labs.ananta.chandra.MainActivity.lambda$clipSet$10(this.f$0);
+        return;
+    }
+}

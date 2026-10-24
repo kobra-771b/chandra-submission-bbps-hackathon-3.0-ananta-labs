@@ -33,41 +33,48 @@ SUB = v("BBPS Hackathon 3.0 submission")
 DATE = v("October 24, 2026", "24 October 2026", "24 October 2026")
 
 # ---------------------------------------------------------------- content
-# slide = (heading, kind, payload); kind: "lead" | "list" | "cards" | "steps"
+# slide = (kind, heading, payload); kind: "lead" | "list" | "cards" | "steps"
+# Facts come from the shipped sources: docs/Chandra-Specification.html, AndroidManifest.xml,
+# chandra.py, EULA.txt and the Chandra Link source.
 APPLICATION = {
     "slug": "application",
     "title": v("Application Slide Deck"),
-    "tag": v("What Chandra Link does and how people use it"),
+    "tag": v("What Chandra is and how people use it"),
     "slides": [
-        ("lead", v("Chandra Link"), v("Your phone and your PC, talking to each other over your own Wi-Fi. No account. No cloud.")),
+        ("lead", v("Chandra"), v("A personal intelligence that talks, listens and works your computer, with your approval for each task. Serene at rest, capable in motion.")),
         ("list", v("The problem"), [
-            v("Your assistant lives on the PC, but you are often away from the keyboard."),
-            v("Cloud relays add accounts, latency and a third party in the middle."),
-            v("People want a quick, private way to reach the PC from the phone in their hand."),
+            v("Information is endless but our time is not, and getting things done on a computer still means a lot of clicking."),
+            v("Cloud assistants need accounts and send your screen and files away by default."),
+            v("Many people think and speak in Hindi, Hinglish or Indian English, and most assistants serve them poorly."),
         ]),
-        ("cards", v("What it does"), [
-            (v("Ask Chandra from your phone"), v("Type an instruction on the phone. Link opens Chandra on the PC, enters it, and returns the answer to your phone.")),
-            (v("Remote PC actions"), v("Ping, open Chandra, lock, sleep, shut down (the PC asks first), open a link, copy text, show a notification.")),
-            (v("Alerts both ways"), v("Notifications to the phone, and “ring my phone” with sound and vibration."),),
-            (v("Presence"), v("Each side shows whether the other is online. Pairing survives restarts.")),
+        ("cards", v("The Chandra family"), [
+            (v("Chandra Desktop"), v("A voice-first assistant in its own quiet window for Windows 10 and 11. About 12.6 MB to download, installed per user with no administrator rights.", "A voice-first assistant in its own quiet window for Windows 10 and 11. About 12.6 MB to download, installed per user with no administrator rights.")),
+            (v("Chandra for Android"), v("The same Chandra host running inside an Android app (version 1.0.1), with Android speech and text-to-speech.")),
+            (v("Chandra Link"), v("Pairs the phone with the PC over your own Wi-Fi to ask Chandra, run PC actions and receive alerts. No account, no cloud.")),
         ]),
-        ("steps", v("How pairing works"), [
-            v("Run start.bat on the PC. First run sets itself up."),
-            v("Scan the QR code on the PC page with the phone camera."),
-            v("The phone is paired. No PIN typing in the browser flow."),
-            v("Add the page to the home screen, or install the Android app."),
+        ("cards", v("Talk to it"), [
+            (v("Voice first"), v("Tap the moon, hold Space, or press Ctrl+Space. Chandra listens again after it answers, and you can talk over it.")),
+            (v("English, Hindi, Hinglish"), v("Listening transcribes mixed sentences, and replies follow the language you used.")),
+            (v("A natural voice"), v("Neural speech, sentence by sentence. Anything written for the eye, like code, links or formulas, is never read aloud.")),
+            (v("Nebula"), v("A voice orb whose light follows the sound, over a calm aurora sky.")),
         ]),
-        ("list", v("Android app"), [
-            v("Keeps the link alive in the background."),
-            v("Shows real notifications even when the page is closed."),
-            v("“Find my PC” discovers the PC on the network. Enter the PIN once."),
-            v("Asks to stop battery saving for the app so the link is not killed."),
+        ("steps", v("Two taps for a task"), [
+            v("Allow the task once, to start it."),
+            v("Watch Chandra show each step as it works."),
+            v("Accept the result before it finishes."),
+            v("Deleting, moving or writing files, power, shell commands and anything that sends or pays always ask."),
         ]),
-        ("list", v("Privacy by design"), [
-            v("Everything stays on the local network."),
-            v("Shutdown and sleep need approval on the PC."),
-            v("Chandra’s own approval prompts still apply."),
-            v("Plain HTTP on Wi-Fi: pair at home, not on shared networks."),
+        ("list", v("Remembers and makes"), [
+            v("Memory searched by meaning, not only keywords; it travels as .ananta files."),
+            v("Playbooks: reusable routines instead of fragile automations."),
+            v("Artifacts: code, HTML apps, documents, charts and tables, versioned and sandboxed."),
+            v("Markdown and LaTeX maths drawn properly in every reply."),
+        ]),
+        ("list", v("Safe and private by design"), [
+            v("No wiping commands, no typed card numbers or keys, and a brake at 45 clicks a minute."),
+            v("No screen sensing while a password manager, bank or private window is in front."),
+            v("Settings, chats, memory and keys stay on your computer. No analytics and no telemetry."),
+            v("When there is no key or no internet, a local engine still answers."),
         ]),
         ("lead", v("Thank you"), v("Ananta Labs · BBPS Hackathon 3.0 submission")),
     ],
@@ -76,35 +83,35 @@ APPLICATION = {
 STACK = {
     "slug": "technology-stack",
     "title": v("Technology Stack"),
-    "tag": v("What Chandra Link is built with"),
+    "tag": v("What Chandra is built with"),
     "slides": [
-        ("lead", v("Technology Stack"), v("A small, local-first stack that runs on a normal Windows PC and an Android phone.")),
+        ("lead", v("Technology Stack"), v("Python at the core, a vanilla web interface, and three interchangeable brains.")),
         ("cards", v("Architecture"), [
-            (v("PC service"), v("A Python 3 asyncio program (link.py) serving the phone page, the PC page and a WebSocket API on port 8765.")),
-            (v("Phone client"), v("A mobile web page installable to the home screen, plus an Android app (APK) for background delivery.")),
-            (v("Transport"), v("HTTP and WebSocket on the local network, with heartbeats to track who is online.")),
+            (v("Window"), v("pywebview on WinForms with Microsoft Edge WebView2 draws the page, the Nebula orb and the aurora.")),
+            (v("Native bridge"), v("A JsApi channel carries computer control, screen look, listening and speech. While the window is open the HTTP /act route answers 403.")),
+            (v("Host"), v("chandra.py: one Python file with a standard-library HTTP server on 127.0.0.1, the safeguards, approvals and tools.")),
+            (v("Brains"), v("Claude, then Gemini, then a local engine, chosen automatically or forced with CHANDRA_BRAIN.")),
         ]),
-        ("cards", v("Libraries"), [
-            (v("aiohttp"), v("Async HTTP server, WebSockets, and the client used to talk to Chandra.")),
-            (v("segno"), v("Generates the pairing QR code as SVG.")),
-            (v("zeroconf"), v("mDNS service advertisement so the Android app can “Find my PC”.")),
+        ("cards", v("Interface"), [
+            (v("No framework"), v("Vanilla HTML, CSS and JavaScript modules, packed into the host by pack.py.")),
+            (v("Graphics"), v("WebGL 1 shaders for the aurora sky and the Nebula orb, plus Canvas 2D effects.")),
+            (v("Maths and text"), v("KaTeX 0.19 renders LaTeX as MathML; Markdown is rendered safely.")),
         ]),
-        ("list", v("Windows integration"), [
-            v("PowerShell for notifications, lock, sleep, shutdown prompts and app discovery."),
-            v("Win32 calls (ctypes) to keep the PC awake while Link runs."),
-            v("Chandra’s WebView2 engine is started with a local-only debug port, so Link can enter a prompt and read the reply."),
-            v("start.bat sets up a virtual environment on first run; autostart-on.bat starts Link quietly at login."),
+        ("cards", v("AI and voice"), [
+            (v("Claude"), v("Strongest reasoning when an Anthropic key is set.")),
+            (v("Gemini"), v("Free-tier key unlocks screen vision, listening, natural voice and embedding recall.")),
+            (v("Chandra Engine"), v("A local, offline, text-only engine built on OpenJarvis, used with no key or no internet.")),
         ]),
-        ("list", v("Security model"), [
-            v("Short-lived pairing PIN (5 minutes), compared in constant time."),
-            v("Per-device tokens, stored hashed on the PC."),
-            v("The PC page accepts loopback clients only, and checks Host and Origin against DNS-rebinding and cross-site requests."),
-            v("Risky actions (sleep, shutdown) require approval on the PC."),
+        ("list", v("Android"), [
+            v("A native Java activity hosts a WebView, package labs.ananta.chandra, minimum Android 7.0 (API 24), target API 34."),
+            v("Chaquopy runs Python 3.12 inside the app, serving the same host on 127.0.0.1."),
+            v("A small shim swaps PC-only parts for Android clipboard, links, text-to-speech and speech recognition."),
         ]),
-        ("list", v("Quality and portability"), [
-            v("Dry-run mode records actions without executing them, used for testing on non-Windows systems."),
-            v("No cloud dependency, no account, no telemetry."),
-            v("Dependencies are three small, widely used open-source packages."),
+        ("list", v("Link, installer and safety"), [
+            v("Chandra Link: Python with aiohttp, segno (QR) and zeroconf (discovery) over local Wi-Fi."),
+            v("Chandra Setup: a native Windows installer with one LZMA payload and its own Python runtime, so nothing else must be installed."),
+            v("Safeguards in the host: loopback only, approvals for sensitive actions, a click-rate brake, secret redaction in logs, sandboxed HTML artifacts."),
+            v("Automated tests live in desktop/source/tests."),
         ]),
     ],
 }
@@ -116,33 +123,34 @@ ROADMAP = {
     "slides": [
         ("lead", v("Commercialization Roadmap", "Commercialisation Roadmap"), v("A draft plan by Ananta Labs. Phases and models are proposals to be validated, not commitments.")),
         ("steps", v("Phases"), [
-            v("Phase 1 · Submit and harden: hackathon submission, bug fixes, signed installers."),
-            v("Phase 2 · Closed beta: real users on home and small-office networks; collect feedback."),
+            v("Phase 1 · Submit and harden: hackathon submission, keyless signed installers, bug fixes."),
+            v("Phase 2 · Closed beta: Windows and Android users; feedback on voice, languages and safety prompts."),
             v("Phase 3 · Public launch: stable release, documentation, support channel."),
-            v("Phase 4 · Expand: more PC actions, more platforms, partner integrations."),
+            v("Phase 4 · Expand: macOS and Linux builds, more languages, partner integrations."),
         ]),
         ("cards", v("Who it is for"), [
-            (v("Individuals"), v("People who run Chandra on a PC and want to reach it from a phone.")),
-            (v("Small teams"), v("Shared office PCs that need simple, private remote access.")),
-            (v("Partners"), v("Organizations that want to bundle a private phone-to-PC link.", "Organisations that want to bundle a private phone-to-PC link.")),
+            (v("Individuals"), v("People who want a private, voice-first assistant that can do real work on their computer.")),
+            (v("Hindi and Hinglish speakers"), v("A first-class experience in the languages many people actually speak.")),
+            (v("Small teams"), v("Shared PCs and offices that need simple, local-first automation.")),
         ]),
         ("cards", v("Revenue models under evaluation"), [
-            (v("Free core, paid extras"), v("Core link free; advanced automation and multi-PC paid.")),
+            (v("Free core, paid extras"), v("Core Chandra free; advanced playbooks, multi-device and Link features paid.")),
             (v("Licensing"), v("Per-seat or per-organization licences for teams.", "Per-seat or per-organisation licences for teams.")),
-            (v("Partnerships"), v("Co-branded or embedded distribution with hardware and software partners.")),
+            (v("Partnerships"), v("Co-branded or bundled distribution with hardware and software partners.")),
         ]),
-        ("list", v("Pricing and market notes"), [
+        ("list", v("Pricing and cost notes"), [
             v("Prices will be set per region after beta feedback (US in $, UK in £, India in ₹).",
               "Prices will be set per region after beta feedback (US in $, UK in £, India in ₹).",
               "Prices will be set per region after beta feedback (India in ₹, with USD and GBP for export)."),
-            v("The local-first design avoids cloud hosting cost, keeping margins healthy at small scale."),
+            v("Local-first design means no hosting cost for user data. Cloud AI costs are the user's own keys, or a future managed plan."),
             v("Trust, privacy and ease of setup are the main differentiators."),
         ]),
         ("list", v("Risks and mitigations"), [
-            v("Dependence on Chandra’s internals: keep the integration thin and versioned."),
-            v("Plain HTTP on Wi-Fi: add encrypted transport before public launch."),
-            v("Windows-only PC side: evaluate macOS and Linux after launch."),
-            v("Intellectual property: all work © Ananta Labs; third-party licences tracked in LICENSES.txt."),
+            v("API keys must never ship inside public installers: use keyless builds and per-user setup only."),
+            v("Third-party terms: AI providers' usage terms, and the Commons Clause on bundled UI components, which allows use inside an application but not resale of the components themselves."),
+            v("Dependence on external AI services: keep the local engine as a fallback."),
+            v("Windows-first: validate on real PCs and phones during beta, then add other platforms."),
+            v("Intellectual property: all work © Ananta Labs; third-party licences are tracked in LICENSES.txt."),
         ]),
     ],
 }
@@ -236,7 +244,7 @@ ul,ol{padding-left:1.3rem}li{margin:.5rem 0}
 .cards article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem}
 .cards p{margin:.3rem 0 0;color:var(--mut)}
 .btn{display:inline-block;margin-top:.6rem;padding:.4rem .9rem;border-radius:8px;background:var(--acc);color:var(--bg);text-decoration:none}
-.n{position:absolute;right:16px;bottom:1rem;color:var(--mut);font-size:.8rem}
+.n{position:absolute;left:16px;bottom:1rem;color:var(--mut);font-size:.8rem}
 .home{max-width:60rem;margin:0 auto;padding:3rem 16px;min-height:calc(100vh - 8rem)}
 .nav{position:fixed;right:16px;bottom:3.6rem;display:flex;gap:.4rem}
 .nav button{padding:.4rem .8rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}

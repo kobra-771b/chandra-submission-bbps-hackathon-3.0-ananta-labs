@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--
+Chandra: the eclipse face for ai-visualizer.
+Copyright (C) 2026 Ananta Labs. All rights reserved.
+
+Brand: black-only canvas (#030304 to #07080B), the approved silver crescent-and-star
+mark (mark.png, never redrawn), soft liquid blobs, and an open-bottom eclipse arc
+with a single point of light travelling along it. One light source, pearl-white.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chandra</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;background:#030304;overflow:hidden;cursor:none}
+  canvas#stage{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script src="../../core.js"></script>
+<script>
+"use strict";
+const Q=new URLSearchParams(location.search);
+const SHOT=Q.get("shot");
+const cv=document.getElementById("stage"), ctx=cv.getContext("2d");
+let W=0,H=0,DPR=1;
+function fit(){DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
+  cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}
+addEventListener("resize",fit);fit();
+
+const MARK=new Image();MARK.src="mark.png";
+
+AV.init({mic:true});
+AV.ready(a=>{document.title=a.name.charAt(0)+a.name.slice(1).toLowerCase()+" · Chandra"});
+
+const TEXT="#ECEEF2", SUB="rgba(219,222,229,.64)";
+const STATE_WORD={idle:"AT REST",listening:"LISTENING",thinking:"THINKING",speaking:"SPEAKING"};
+
+// eased per-state levels, so every change glides instead of snapping
+const ease={arc:.16,speed:.08,glow:0,listen:0,think:0,speak:0};
+let now=0, lightA=0;
+
+const BLOBS=[ // slow liquid shapes: fractions of the screen, drift periods in seconds
+  {x:.30,y:.34,r:.42,px:31,py:37,c:[236,238,242],a:.022},
+  {x:.70,y:.30,r:.36,px:43,py:29,c:[232,226,214],a:.018},
+  {x:.58,y:.72,r:.48,px:53,py:41,c:[220,224,232],a:.016},
+  {x:.24,y:.76,r:.34,px:37,py:47,c:[240,234,224],a:.014},
+];
+
+function approach(k,target,dt,ms){ease[k]+=(target-ease[k])*Math.min(1,dt/ms)}
+
+function frame(dt){
+  AV.tick(dt);
+  now+=dt;
+  const t=now/1000, st=AV.state, env=AV.env;
+  const S=Math.min(W,H)*.30;               // mark size
+  const cx=W/2, cy=H*.45;                 // mark centre
+  const R=S*1.32;                         // eclipse radius
+  const GAP=.62;                          // half-angle of the open bottom (radians)
+
+  approach("arc",   st==="idle"?.15:st==="listening"?.30+.35*AV.micLevel:st==="thinking"?.24:.20+.55*env, dt,260);
+  approach("speed", st==="idle"?.07:st==="listening"?.14:st==="thinking"?.62:.18+.5*env, dt,400);
+  approach("glow",  st==="speaking"?env:st==="thinking"?.35+.25*Math.sin(t*8.8):st==="listening"?.18:0, dt,140);
+  approach("listen",st==="listening"?1:0, dt,300);
+  approach("think", st==="thinking"?1:0, dt,300);
+  approach("speak", st==="speaking"?1:0, dt,200);
+
+  // ---- canvas: near-black, a breath lighter at the centre
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.8);
+  bg.addColorStop(0,"#07080B");bg.addColorStop(1,"#030304");
+  ctx.globalCompositeOperation="source-over";
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+  // ---- liquid blobs
+  for(const b of BLOBS){
+    const x=(b.x+.06*Math.sin(t*2*Math.PI/b.px))*W, y=(b.y+.05*Math.cos(t*2*Math.PI/b.py))*H;
+    const r=b.r*Math.max(W,H)*(1+.04*Math.sin(t*2*Math.PI/(b.px+b.py)));
+    const a=b.a*(1+.6*ease.speak*env+.3*ease.listen);
+    const g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,`rgba(${b.c},${a})`);g.addColorStop(1,`rgba(${b.c},0)`);
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  }
+
+  // ---- listening: faint ripples rising from the mark with the microphone
+  if(ease.listen>.01){
+    for(let i=0;i<3;i++){
+      const p=((t*.45+i/3)%1), rr=S*.55+p*S*1.1;
+      ctx.strokeStyle=`rgba(236,238,242,${(1-p)*.10*ease.listen*(.4+AV.micLevel)})`;
+      ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,rr,0,Math.PI*2);ctx.stroke();
+    }
+  }
+
+  // ---- the eclipse arc: open at the bottom, from bottom-left over the top to bottom-right
+  const a0=Math.PI/2+GAP, a1=Math.PI/2-GAP+Math.PI*2, span=a1-a0;
+  const arcA=Math.min(.9,ease.arc);
+  const ag=ctx.createLinearGradient(cx,cy-R,cx,cy+R);
+  ag.addColorStop(0,`rgba(244,242,236,${arcA})`);
+  ag.addColorStop(1,`rgba(236,238,242,${arcA*.25})`);
+  ctx.strokeStyle=ag;ctx.lineWidth=1.25;ctx.lineCap="round";
+  ctx.beginPath();ctx.arc(cx,cy,R,a0,a1);ctx.stroke();
+
+  // speaking: the voice rides a second, finer arc just inside the first
+  if(ease.speak>.01){
+    const s=AV.samples, n=s.length, STEPS=180;
+    const at=k=>{k=Math.max(0,Math.min(n-1,k));return(s[k]-.5)*2};
+    ctx.beginPath();
+    for(let i=0;i<=STEPS;i++){
+      const f=i/STEPS*(n-1), k=Math.floor(f), u=f-k;
+      const v=(at(k-1)+2*at(k)+at(k+1))/4*(1-u)+(at(k)+2*at(k+1)+at(k+2))/4*u;  // smoothed, interpolated
+      const taper=Math.sin(Math.PI*i/STEPS);                                      // settles to the arc at both ends
+      const ang=a0+span*(i/STEPS), rr=R-S*.06-v*S*.05*env*taper;
+      const x=cx+Math.cos(ang)*rr, y=cy+Math.sin(ang)*rr;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.strokeStyle=`rgba(236,238,242,${.30*ease.speak*(.35+env)})`;ctx.lineWidth=1;ctx.stroke();
+  }
+
+  // the single point of light travelling the arc (it loops through the gap unseen)
+  lightA=(lightA+ease.speed*dt/1000)%1;
+  const la=a0+span*lightA, lx=cx+Math.cos(la)*R, ly=cy+Math.sin(la)*R;
+  const edge=Math.min(1,Math.min(lightA,1-lightA)*12);          // fade in/out at the gap
+  const tail=Math.min(la-a0,span*(.05+.16*ease.speed)), SEG=14;
+  for(let i=0;i<SEG;i++){
+    const f=(i+1)/SEG, s0=la-tail*(1-i/SEG), s1=la-tail*(1-(i+1)/SEG);
+    ctx.strokeStyle=`rgba(246,243,236,${f*f*.55*edge})`;ctx.lineWidth=1+f*1.4;
+    ctx.beginPath();ctx.arc(cx,cy,R,s0,s1);ctx.stroke();
+  }
+  const lg=ctx.createRadialGradient(lx,ly,0,lx,ly,18+10*ease.think);
+  lg.addColorStop(0,`rgba(250,248,242,${.95*edge})`);lg.addColorStop(.25,`rgba(246,240,228,${.35*edge})`);lg.addColorStop(1,"rgba(246,240,228,0)");
+  ctx.fillStyle=lg;ctx.beginPath();ctx.arc(lx,ly,18+10*ease.think,0,Math.PI*2);ctx.fill();
+
+  // ---- the mark: never redrawn, only lit
+  if(MARK.complete&&MARK.naturalWidth){
+    const breathe=1+.012*Math.sin(t*1.1)*(1-ease.speak);
+    const sz=S*breathe*(1+.035*ease.speak*env);
+    ctx.save();
+    ctx.shadowColor=`rgba(242,238,228,${.18+.5*ease.glow})`;
+    ctx.shadowBlur=14+70*ease.glow;
+    ctx.globalAlpha=.88+.12*Math.max(ease.glow,ease.listen*.6);
+    ctx.drawImage(MARK,cx-sz/2,cy-sz/2,sz,sz);
+    ctx.restore();
+  }
+
+  // ---- name and state, quiet silver type under the arc
+  const ty=cy+R*Math.sin(Math.PI/2-GAP)+Math.max(34,S*.16);
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.font=`600 ${Math.round(Math.max(13,S*.062))}px "SF Pro Display","SF Pro",-apple-system,BlinkMacSystemFont,system-ui,sans-serif`;
+  if("letterSpacing" in ctx)ctx.letterSpacing=".42em";
+  ctx.fillStyle=TEXT;ctx.fillText(String(AV.name||"CHANDRA").toUpperCase(),cx,ty);
+  ctx.font=`500 ${Math.round(Math.max(10,S*.034))}px "SF Pro Text","SF Pro",-apple-system,BlinkMacSystemFont,system-ui,sans-serif`;
+  if("letterSpacing" in ctx)ctx.letterSpacing=".32em";
+  ctx.fillStyle=SUB;ctx.fillText(STATE_WORD[st]||"",cx,ty+Math.max(24,S*.09));
+  ctx.textAlign="left";
+  if("letterSpacing" in ctx)ctx.letterSpacing=".28em";
+  ctx.font=`500 10px "SF Pro Text","SF Pro",-apple-system,system-ui,sans-serif`;
+  ctx.fillStyle="rgba(219,222,229,.38)";ctx.fillText(AV.badge?String(AV.badge).toUpperCase():"ANANTA LABS",28,26);
+  if("letterSpacing" in ctx)ctx.letterSpacing="0px";
+
+  // attention: one slow pearl pulse around the whole arc
+  if(AV.alert){
+    ctx.strokeStyle=`rgba(244,240,230,${.25+.2*Math.sin(t*5)})`;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(cx,cy,R+6,a0,a1);ctx.stroke();
+  }
+}
+
+addEventListener("keydown",e=>{
+  if(e.key==="f"||e.key==="F"){
+    document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+  }
+});
+
+if(SHOT){
+  AV.shotRun(frame);
+}else{
+  let last=performance.now();
+  (function loop(ts){
+    const dt=Math.min(100,ts-last);last=ts;
+    frame(dt);
+    requestAnimationFrame(loop);
+  })(performance.now());
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+package labs.ananta.chandra;
+public final class R$color {
+    public static int chandra_bg = 2130771968;
+
+    private R$color()
+    {
+        return;
+    }
+}

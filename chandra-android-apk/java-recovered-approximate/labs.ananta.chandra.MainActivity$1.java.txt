@@ -1,0 +1,21 @@
+package labs.ananta.chandra;
+ class MainActivity$1 extends android.webkit.WebViewClient {
+    final synthetic labs.ananta.chandra.MainActivity this$0;
+
+    MainActivity$1(labs.ananta.chandra.MainActivity p1)
+    {
+        this.this$0 = p1;
+        return;
+    }
+
+    public boolean shouldOverrideUrlLoading(android.webkit.WebView p4, android.webkit.WebResourceRequest p5)
+    {
+        android.net.Uri v0 = p5.getUrl();
+        if (!"127.0.0.1".equals(v0.getHost())) {
+            labs.ananta.chandra.MainActivity.openExternal(v0.toString());
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "time":       { "command": "uvx", "args": ["mcp-server-time"] },
+    "fetch":      { "command": "uvx", "args": ["mcp-server-fetch"] },
+    "memory":     { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-memory"] },
+    "thinking":   { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"] },
+    "filesystem": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\YOUR-NAME\\Documents"] },
+    "browser":    { "command": "npx", "args": ["@playwright/mcp@latest"] }
+  }
+}

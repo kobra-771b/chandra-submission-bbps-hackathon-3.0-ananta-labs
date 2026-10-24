@@ -1,0 +1,211 @@
+package labs.ananta.chandra;
+ class MainActivity$Bridge {
+    final synthetic labs.ananta.chandra.MainActivity this$0;
+
+    public static synthetic void $r8$lambda$ACguh8ek0Y5GNT8Hzu1VwOkHuIg(labs.ananta.chandra.MainActivity$Bridge p0, String p1, String p2, boolean p3, int p4)
+    {
+        p0.lambda$srStart$1(p1, p2, p3, p4);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$AVXbvzq_m2TDN2uIRxMJ426SO8c(labs.ananta.chandra.MainActivity$Bridge p0, String p1)
+    {
+        p0.lambda$srAbort$3(p1);
+        return;
+    }
+
+    public static synthetic void $r8$lambda$oJiES70JHo530gCJyxzd1cM6lnc(labs.ananta.chandra.MainActivity$Bridge p0, String p1)
+    {
+        p0.lambda$srStop$2(p1);
+        return;
+    }
+
+    private MainActivity$Bridge(labs.ananta.chandra.MainActivity p1)
+    {
+        this.this$0 = p1;
+        return;
+    }
+
+    synthetic MainActivity$Bridge(labs.ananta.chandra.MainActivity p1, labs.ananta.chandra.MainActivity$Bridge-IA p2)
+    {
+        this(p1);
+        return;
+    }
+
+    private synthetic void lambda$srAbort$3(String p2)
+    {
+        if ((p2.equals(labs.ananta.chandra.MainActivity.-$$Nest$fgetrecId(this.this$0))) || (p2.equals(labs.ananta.chandra.MainActivity.-$$Nest$fgetwaitId(this.this$0)))) {
+            labs.ananta.chandra.MainActivity.-$$Nest$msrEnd(this.this$0);
+        }
+        return;
+    }
+
+    private synthetic void lambda$srStart$1(String p2, String p3, boolean p4, int p5)
+    {
+        labs.ananta.chandra.MainActivity.-$$Nest$msrStart(this.this$0, p2, p3, p4, p5);
+        return;
+    }
+
+    private synthetic void lambda$srStop$2(String p2)
+    {
+        if ((!p2.equals(labs.ananta.chandra.MainActivity.-$$Nest$fgetrecId(this.this$0))) || (labs.ananta.chandra.MainActivity.-$$Nest$fgetrec(this.this$0) == null)) {
+            if (p2.equals(labs.ananta.chandra.MainActivity.-$$Nest$fgetwaitId(this.this$0))) {
+                labs.ananta.chandra.MainActivity.-$$Nest$msrEnd(this.this$0);
+            }
+        } else {
+            labs.ananta.chandra.MainActivity.-$$Nest$fgetrec(this.this$0).stopListening();
+        }
+        return;
+    }
+
+    static synthetic void lambda$toast$0(String p2)
+    {
+        android.widget.Toast.makeText(labs.ananta.chandra.MainActivity.-$$Nest$sfgetapp(), p2, 1).show();
+        return;
+    }
+
+    public String micState()
+    {
+        String v0_2;
+        if (!labs.ananta.chandra.MainActivity.-$$Nest$mhas(this.this$0, "android.permission.RECORD_AUDIO")) {
+            v0_2 = "prompt";
+        } else {
+            v0_2 = "granted";
+        }
+        return v0_2;
+    }
+
+    public void saveFile(String p8, String p9, String p10)
+    {
+        String v0_1 = p8.replaceAll("[\\\\/:*?\"<>|\\x00-\\x1f]", "_");
+        try {
+            String v2_2;
+            Exception v1_2 = android.util.Base64.decode(p10, 0);
+        } catch (Exception v1_3) {
+            this.toast(new StringBuilder().append("Could not save ").append(v0_1).append(": ").append(v1_3.getMessage()).toString());
+            return;
+        }
+        if (android.os.Build$VERSION.SDK_INT < 29) {
+            String v2_1 = new java.io.File(this.this$0.getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS), "Chandra");
+            v2_1.mkdirs();
+            String v3_6 = new java.io.File(v2_1, v0_1);
+            String v4_4 = new java.io.FileOutputStream(v3_6);
+            try {
+                v4_4.write(v1_2);
+            } catch (Throwable v5_0) {
+                try {
+                    v4_4.close();
+                } catch (Throwable v6_0) {
+                    v5_0.addSuppressed(v6_0);
+                }
+                throw v5_0;
+            }
+            v4_4.close();
+            v2_2 = v3_6.getAbsolutePath();
+        } else {
+            String v2_4 = new android.content.ContentValues();
+            v2_4.put("_display_name", v0_1);
+            v2_4.put("mime_type", p9);
+            v2_4.put("relative_path", new StringBuilder().append(android.os.Environment.DIRECTORY_DOWNLOADS).append("/Chandra").toString());
+            String v4_14 = this.this$0.getContentResolver().openOutputStream(this.this$0.getContentResolver().insert(android.provider.MediaStore$Downloads.EXTERNAL_CONTENT_URI, v2_4));
+            try {
+                v4_14.write(v1_2);
+            } catch (Throwable v5_3) {
+                if (v4_14 != null) {
+                    try {
+                        v4_14.close();
+                    } catch (Throwable v6_1) {
+                        v5_3.addSuppressed(v6_1);
+                    }
+                }
+                throw v5_3;
+            }
+            if (v4_14 != null) {
+                v4_14.close();
+            }
+            v2_2 = new StringBuilder().append("Downloads/Chandra/").append(v0_1).toString();
+        }
+        this.toast(new StringBuilder().append("Saved to ").append(v2_2).toString());
+        return;
+    }
+
+    public void srAbort(String p3)
+    {
+        this.this$0.runOnUiThread(new labs.ananta.chandra.MainActivity$Bridge$$ExternalSyntheticLambda2(this, p3));
+        return;
+    }
+
+    public void srStart(String p9, String p10, boolean p11, int p12)
+    {
+        labs.ananta.chandra.MainActivity v0 = this.this$0;
+        labs.ananta.chandra.MainActivity$Bridge$$ExternalSyntheticLambda1 v7 = new labs.ananta.chandra.MainActivity$Bridge$$ExternalSyntheticLambda1;
+        v7(this, p9, p10, p11, p12);
+        v0.runOnUiThread(v7);
+        return;
+    }
+
+    public void srStop(String p3)
+    {
+        this.this$0.runOnUiThread(new labs.ananta.chandra.MainActivity$Bridge$$ExternalSyntheticLambda0(this, p3));
+        return;
+    }
+
+    public void toast(String p3)
+    {
+        labs.ananta.chandra.MainActivity.-$$Nest$sfgetMAIN().post(new labs.ananta.chandra.MainActivity$Bridge$$ExternalSyntheticLambda3(p3));
+        return;
+    }
+
+    public void ttsSpeak(String p5, String p6, String p7, String p8, float p9, float p10, float p11)
+    {
+        if (labs.ananta.chandra.MainActivity.-$$Nest$fgetttsReady(this.this$0)) {
+            android.speech.tts.Voice v0_2 = 0;
+            try {
+                android.speech.tts.TextToSpeech v1_0 = labs.ananta.chandra.MainActivity.-$$Nest$fgettts(this.this$0).getVoices().iterator();
+            } catch (android.speech.tts.TextToSpeech v1) {
+                if (v0_2 == null) {
+                    if (!p8.isEmpty()) {
+                        labs.ananta.chandra.MainActivity.-$$Nest$fgettts(this.this$0).setLanguage(java.util.Locale.forLanguageTag(p8));
+                    }
+                } else {
+                    labs.ananta.chandra.MainActivity.-$$Nest$fgettts(this.this$0).setVoice(v0_2);
+                }
+                labs.ananta.chandra.MainActivity.-$$Nest$fgettts(this.this$0).setSpeechRate(p9);
+                labs.ananta.chandra.MainActivity.-$$Nest$fgettts(this.this$0).setPitch(p10);
+                android.speech.tts.TextToSpeech v1_11 = new android.os.Bundle();
+                v1_11.putFloat("volume", p11);
+                labs.ananta.chandra.MainActivity.-$$Nest$fgettts(this.this$0).speak(p6, 1, v1_11, p5);
+                return;
+            }
+            while (v1_0.hasNext()) {
+                java.util.Locale v2_2 = ((android.speech.tts.Voice) v1_0.next());
+                if (v2_2.getName().equals(p7)) {
+                    v0_2 = v2_2;
+                    break;
+                }
+            }
+        } else {
+            labs.ananta.chandra.MainActivity.-$$Nest$mttsEvent(this.this$0, p5, "error");
+            return;
+        }
+    }
+
+    public void ttsStop()
+    {
+        if (labs.ananta.chandra.MainActivity.-$$Nest$fgetttsReady(this.this$0)) {
+            labs.ananta.chandra.MainActivity.-$$Nest$fgettts(this.this$0).stop();
+        }
+        return;
+    }
+
+    public String ttsVoices()
+    {
+        String v0_2;
+        if (!labs.ananta.chandra.MainActivity.-$$Nest$fgetttsReady(this.this$0)) {
+            v0_2 = "[]";
+        } else {
+            v0_2 = labs.ananta.chandra.MainActivity.-$$Nest$mvoicesJson(this.this$0);
+        }
+        return v0_2;
+    }
+}

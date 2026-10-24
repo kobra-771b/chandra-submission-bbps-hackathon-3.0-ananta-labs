@@ -1,0 +1,10 @@
+package labs.ananta.chandra;
+public final class R$mipmap {
+    public static int ic_launcher = 2130837504;
+    public static int ic_launcher_round = 2130837505;
+
+    private R$mipmap()
+    {
+        return;
+    }
+}

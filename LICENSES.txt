@@ -4,26 +4,48 @@ LICENSES
    Copyright (c) 2026 Ananta Labs. All rights reserved.
    Made available to the BBPS Hackathon 3.0 organisers and authorities for
    evaluation only, under the terms in COPYRIGHTS.txt. No open-source
-   licence is granted for Ananta Labs' own code at this time.
+   licence is granted for Ananta Labs' own code at this time. End users of
+   the released software are bound by the Chandra End User Licence Agreement
+   (chandra-desktop-exe/EULA.txt).
 
-2. Third-party components
-   Chandra Link depends on the following open-source packages (see
-   source/chandra-link/requirements.txt). They are installed from PyPI at
-   setup time and are not modified or bundled in this repository. Each
-   remains under its own licence; the notices below are for reference.
-   Please confirm against the installed versions before redistribution.
+2. Third-party components that are INCLUDED in this repository
+   (each keeps its own licence; full notices are in
+   chandra-desktop-exe/desktop/THIRD-PARTY-NOTICES.md)
 
+   KaTeX 0.19.0              MIT                    chandra-desktop-exe/desktop/source/ui/katex.min.js
+   React Bits ports (David Haz): TargetCursor, GradientASCII, Grainient
+                             MIT + Commons Clause   chandra-desktop-exe/desktop/source/ui/
+                                                    target-cursor.js, gradient-ascii.js, grainient.js
+       The Commons Clause allows use as part of an application but not
+       selling, sublicensing or redistributing the components themselves.
+       They are included here only as part of the Chandra application source.
+   SF Pro typeface (fonts)   Apple font licence terms; see THIRD-PARTY-NOTICES.md
+   LZMA SDK                  Public domain          used by the Setup installer (binary only)
+
+3. Third-party components that are NOT included (left out on purpose)
+   They are installed or bundled by the released products and keep their own licences:
+
+   Python 3.12 (PSF Licence), pywebview, PyAutoGUI, Pillow,
+   Microsoft Edge WebView2 and .NET Framework (Microsoft terms)
+                                  bundled in the Windows EXE (chandra-desktop-exe/PROVENANCE.md)
+   OpenJarvis (upstream project)  https://github.com/open-jarvis/OpenJarvis   "Chandra Engine"
+   Chaquopy and CPython           Python runtime inside the Android APK
+   Android SDK and AndroidX       Apache License 2.0 (Android Open Source Project)
+
+   Chandra Link (chandra-link-pc/requirements.txt), installed from PyPI at setup:
    aiohttp   (>= 3.9)    Apache License 2.0     https://github.com/aio-libs/aiohttp
    segno     (>= 1.6)    BSD 3-Clause License   https://github.com/heuer/segno
    zeroconf  (>= 0.130)  LGPL-2.1-or-later      https://github.com/python-zeroconf/python-zeroconf
-
    zeroconf is used as an unmodified, dynamically installed library.
 
-3. Runtime and platform
-   Python (PSF License), Windows PowerShell and Microsoft Edge WebView2
-   (Microsoft licence terms) are used at runtime on the user's machine and
-   are not distributed with this repository.
+   Please confirm the exact licence text of each package at the version you
+   redistribute. The entries in section 3 were not independently verified.
 
-4. Slide decks
+4. AI services
+   Chandra can call Anthropic (Claude) and Google (Gemini) APIs with the
+   user's own keys. Their terms apply to that use. No keys are included in
+   this repository.
+
+5. Slide decks
    The decks in deck/ use no third-party code, fonts or images; they are
    plain HTML, CSS and JavaScript written by Ananta Labs.

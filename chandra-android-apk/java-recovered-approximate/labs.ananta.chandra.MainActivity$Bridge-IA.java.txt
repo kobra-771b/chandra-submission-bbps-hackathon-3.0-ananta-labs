@@ -1,0 +1,3 @@
+package labs.ananta.chandra;
+public final synthetic class MainActivity$Bridge-IA {
+}

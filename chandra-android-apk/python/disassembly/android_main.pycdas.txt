@@ -1,0 +1,677 @@
+android_main.pyc (Python 3.12)
+[Code]
+    File Name: android_main.py
+    Object Name: <module>
+    Qualified Name: <module>
+    Arg Count: 0
+    Pos Only Arg Count: 0
+    KW Only Arg Count: 0
+    Stack Size: 2
+    Flags: 0x00000000
+    [Names]
+        '__doc__'
+        'os'
+        'threading'
+        'pathlib'
+        'Path'
+        'PHONE_ONLY'
+        '_STATE'
+        '_android'
+        '_clip_get'
+        '_clip_set'
+        '_open_url'
+        '_open_app'
+        '_no_pc'
+        'start'
+    [Locals+Names]
+    [Constants]
+        "Chandra for Android: runs the desktop host (chandra.py, unchanged) inside the app.\n\nMainActivity calls start(); the host serves the same page and the same routes as the desktop app's\nbrowser mode (/brain, /tts, /stt, /image, /artifacts, /memory/search, /act for web tools ...) on\n127.0.0.1 only, behind the pairing code. Only the pieces that need a PC are swapped for Android ones:\nthe clipboard and opening links use Android; mouse, keyboard and screen control say they need a computer.\n"
+        0
+        None
+        (
+            'Path'
+        )
+        "That needs Chandra on a computer: a phone can't be driven by mouse, keyboard or screen control."
+        [Code]
+            File Name: android_main.py
+            Object Name: _android
+            Qualified Name: _android
+            Arg Count: 0
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 3
+            Flags: 0x00000003 (CO_OPTIMIZED | CO_NEWLOCALS)
+            [Names]
+                'java'
+                'jclass'
+            [Locals+Names]
+                'jclass'
+            [Constants]
+                None
+                0
+                (
+                    'jclass'
+                )
+                'labs.ananta.chandra.MainActivity'
+            [Disassembly]
+                0       RESUME                          0
+                2       LOAD_CONST                      1: 0
+                4       LOAD_CONST                      2: ('jclass',)
+                6       IMPORT_NAME                     0: java
+                8       IMPORT_FROM                     1: jclass
+                10      STORE_FAST                      0: jclass
+                12      POP_TOP                         
+                14      PUSH_NULL                       
+                16      LOAD_FAST                       0: jclass
+                18      LOAD_CONST                      3: 'labs.ananta.chandra.MainActivity'
+                20      CALL                            1
+                28      RETURN_VALUE                    
+            [Exception Table]
+        [Code]
+            File Name: android_main.py
+            Object Name: _clip_get
+            Qualified Name: _clip_get
+            Arg Count: 0
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 4
+            Flags: 0x00000003 (CO_OPTIMIZED | CO_NEWLOCALS)
+            [Names]
+                'str'
+                '_android'
+                'clipGet'
+            [Locals+Names]
+            [Constants]
+                None
+                ''
+            [Disassembly]
+                0       RESUME                          0
+                2       LOAD_GLOBAL                     1: NULL + str
+                12      LOAD_GLOBAL                     3: NULL + _android
+                22      CALL                            0
+                30      LOAD_ATTR                       5: clipGet
+                50      CALL                            0
+                58      COPY                            1
+                60      POP_JUMP_IF_TRUE                2 (to 66)
+                62      POP_TOP                         
+                64      LOAD_CONST                      1: ''
+                66      CALL                            1
+                74      RETURN_VALUE                    
+            [Exception Table]
+        [Code]
+            File Name: android_main.py
+            Object Name: _clip_set
+            Qualified Name: _clip_set
+            Arg Count: 1
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 5
+            Flags: 0x00000003 (CO_OPTIMIZED | CO_NEWLOCALS)
+            [Names]
+                '_android'
+                'clipSet'
+                'str'
+            [Locals+Names]
+                'text'
+            [Constants]
+                None
+            [Disassembly]
+                0       RESUME                          0
+                2       LOAD_GLOBAL                     1: NULL + _android
+                12      CALL                            0
+                20      LOAD_ATTR                       3: clipSet
+                40      LOAD_GLOBAL                     5: NULL + str
+                50      LOAD_FAST                       0: text
+                52      CALL                            1
+                60      CALL                            1
+                68      POP_TOP                         
+                70      RETURN_CONST                    0: None
+            [Exception Table]
+        [Code]
+            File Name: android_main.py
+            Object Name: _open_url
+            Qualified Name: _open_url
+            Arg Count: 1
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 4
+            Flags: 0x00000003 (CO_OPTIMIZED | CO_NEWLOCALS)
+            [Names]
+                'str'
+                'lower'
+                'startswith'
+                'RuntimeError'
+                '_android'
+                'openExternal'
+            [Locals+Names]
+                'a'
+                'u'
+            [Constants]
+                None
+                'url'
+                (
+                    'http://'
+                    'https://'
+                )
+                'Only http(s) URLs'
+                'ok'
+                True
+            [Disassembly]
+                0       RESUME                          0
+                2       LOAD_GLOBAL                     1: NULL + str
+                12      LOAD_FAST                       0: a
+                14      LOAD_CONST                      1: 'url'
+                16      BINARY_SUBSCR                   
+                20      CALL                            1
+                28      STORE_FAST                      1: u
+                30      LOAD_FAST                       1: u
+                32      LOAD_ATTR                       3: lower
+                52      CALL                            0
+                60      LOAD_ATTR                       5: startswith
+                80      LOAD_CONST                      2: ('http://', 'https://')
+                82      CALL                            1
+                90      POP_JUMP_IF_TRUE                11 (to 114)
+                92      LOAD_GLOBAL                     7: NULL + RuntimeError
+                102     LOAD_CONST                      3: 'Only http(s) URLs'
+                104     CALL                            1
+                112     RAISE_VARARGS                   1
+                114     LOAD_GLOBAL                     9: NULL + _android
+                124     CALL                            0
+                132     LOAD_ATTR                       11: openExternal
+                152     LOAD_FAST                       1: u
+                154     CALL                            1
+                162     POP_TOP                         
+                164     LOAD_CONST                      4: 'ok'
+                166     LOAD_CONST                      5: True
+                168     BUILD_MAP                       1
+                170     RETURN_VALUE                    
+            [Exception Table]
+        [Code]
+            File Name: android_main.py
+            Object Name: _open_app
+            Qualified Name: _open_app
+            Arg Count: 1
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 6
+            Flags: 0x00000003 (CO_OPTIMIZED | CO_NEWLOCALS)
+            [Names]
+                'str'
+                'get'
+                'strip'
+                'RuntimeError'
+                '_android'
+                'openApp'
+            [Locals+Names]
+                'a'
+                'n'
+            [Constants]
+                None
+                'name'
+                ''
+                'Invalid app name'
+                "I couldn't find an app called "
+                ' on this phone.'
+                'ok'
+                True
+            [Disassembly]
+                0       RESUME                          0
+                2       LOAD_GLOBAL                     1: NULL + str
+                12      LOAD_FAST                       0: a
+                14      LOAD_ATTR                       3: get
+                34      LOAD_CONST                      1: 'name'
+                36      LOAD_CONST                      2: ''
+                38      CALL                            2
+                46      CALL                            1
+                54      LOAD_ATTR                       5: strip
+                74      CALL                            0
+                82      STORE_FAST                      1: n
+                84      LOAD_FAST                       1: n
+                86      POP_JUMP_IF_TRUE                11 (to 110)
+                88      LOAD_GLOBAL                     7: NULL + RuntimeError
+                98      LOAD_CONST                      3: 'Invalid app name'
+                100     CALL                            1
+                108     RAISE_VARARGS                   1
+                110     LOAD_GLOBAL                     9: NULL + _android
+                120     CALL                            0
+                128     LOAD_ATTR                       11: openApp
+                148     LOAD_FAST                       1: n
+                150     CALL                            1
+                158     POP_JUMP_IF_TRUE                17 (to 194)
+                160     LOAD_GLOBAL                     7: NULL + RuntimeError
+                170     LOAD_CONST                      4: "I couldn't find an app called "
+                172     LOAD_FAST                       1: n
+                174     BINARY_OP                       0 (+)
+                178     LOAD_CONST                      5: ' on this phone.'
+                180     BINARY_OP                       0 (+)
+                184     CALL                            1
+                192     RAISE_VARARGS                   1
+                194     LOAD_CONST                      6: 'ok'
+                196     LOAD_CONST                      7: True
+                198     BUILD_MAP                       1
+                200     RETURN_VALUE                    
+            [Exception Table]
+        [Code]
+            File Name: android_main.py
+            Object Name: _no_pc
+            Qualified Name: _no_pc
+            Arg Count: 0
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 3
+            Flags: 0x0000000F (CO_OPTIMIZED | CO_NEWLOCALS | CO_VARARGS | CO_VARKEYWORDS)
+            [Names]
+                'RuntimeError'
+                'PHONE_ONLY'
+            [Locals+Names]
+                '_a'
+                '_k'
+            [Constants]
+                None
+            [Disassembly]
+                0       RESUME                          0
+                2       LOAD_GLOBAL                     1: NULL + RuntimeError
+                12      LOAD_GLOBAL                     2: PHONE_ONLY
+                22      CALL                            1
+                30      RAISE_VARARGS                   1
+            [Exception Table]
+        [Code]
+            File Name: android_main.py
+            Object Name: start
+            Qualified Name: start
+            Arg Count: 2
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 6
+            Flags: 0x00000003 (CO_OPTIMIZED | CO_NEWLOCALS)
+            [Names]
+                '_STATE'
+                'os'
+                'environ'
+                'setdefault'
+                'chandra'
+                'http.server'
+                'ThreadingHTTPServer'
+                'Path'
+                'HERE'
+                '_clip_get'
+                '_clip_set'
+                '_no_pc'
+                '_gui'
+                '_grab'
+                '_open_url'
+                'TOOLS'
+                '_open_app'
+                'webbrowser'
+                'open'
+                'android_shim'
+                'app_html'
+                'load_env'
+                'CFG'
+                'update'
+                'pairing_code'
+                'start_log'
+                'APP_VERSION'
+                'range'
+                'H'
+                'OSError'
+                'RuntimeError'
+                'threading'
+                'Thread'
+                'serve_forever'
+                'start'
+            [Locals+Names]
+                'data_dir'
+                'assets_dir'
+                'chandra'
+                'ThreadingHTTPServer'
+                'name'
+                'srv'
+                'port'
+                'android_shim'
+                'page'
+            [Constants]
+                'Start the host once; returns the app URL for the WebView.'
+                'url'
+                'CHANDRA_DATA'
+                'HOME'
+                '1'
+                'CHANDRA_NO_SUPERVISE'
+                0
+                None
+                (
+                    'ThreadingHTTPServer'
+                )
+                'open_url'
+                'open_app'
+                (
+                    'run_shell'
+                    'power'
+                    'set_volume'
+                    'set_brightness'
+                    'list_windows'
+                    'focus_window'
+                )
+                [Code]
+                    File Name: android_main.py
+                    Object Name: <lambda>
+                    Qualified Name: start.<locals>.<lambda>
+                    Arg Count: 1
+                    Pos Only Arg Count: 0
+                    KW Only Arg Count: 0
+                    Stack Size: 5
+                    Flags: 0x0000001F (CO_OPTIMIZED | CO_NEWLOCALS | CO_VARARGS | CO_VARKEYWORDS | CO_NESTED)
+                    [Names]
+                        '_android'
+                        'openExternal'
+                        'str'
+                    [Locals+Names]
+                        'u'
+                        'a'
+                        'k'
+                    [Constants]
+                        None
+                    [Disassembly]
+                        0       RESUME                          0
+                        2       LOAD_GLOBAL                     1: NULL + _android
+                        12      CALL                            0
+                        20      LOAD_ATTR                       3: openExternal
+                        40      LOAD_GLOBAL                     5: NULL + str
+                        50      LOAD_FAST                       0: u
+                        52      CALL                            1
+                        60      CALL                            1
+                        68      RETURN_VALUE                    
+                    [Exception Table]
+                [Code]
+                    File Name: android_main.py
+                    Object Name: <lambda>
+                    Qualified Name: start.<locals>.<lambda>
+                    Arg Count: 0
+                    Pos Only Arg Count: 0
+                    KW Only Arg Count: 0
+                    Stack Size: 4
+                    Flags: 0x00000013 (CO_OPTIMIZED | CO_NEWLOCALS | CO_NESTED)
+                    [Names]
+                        'inject'
+                    [Locals+Names]
+                        'android_shim'
+                        'page'
+                    [Constants]
+                        None
+                    [Disassembly]
+                        0       COPY_FREE_VARS                  2
+                        2       RESUME                          0
+                        4       LOAD_DEREF                      0: android_shim
+                        6       LOAD_ATTR                       1: inject
+                        26      PUSH_NULL                       
+                        28      LOAD_DEREF                      1: page
+                        30      CALL                            0
+                        38      CALL                            1
+                        46      RETURN_VALUE                    
+                    [Exception Table]
+                False
+                (
+                    'shell'
+                    'native'
+                    'token'
+                )
+                'launch %s on Android'
+                8765
+                8785
+                '127.0.0.1'
+                "No free port for Chandra's host"
+                'port'
+                True
+                'chandra-host'
+                (
+                    'target'
+                    'daemon'
+                    'name'
+                )
+                'http://127.0.0.1:%d/app/%s'
+                'token'
+            [Disassembly]
+                0       MAKE_CELL                       7: android_shim
+                2       MAKE_CELL                       8: page
+                4       RESUME                          0
+                6       LOAD_CONST                      1: 'url'
+                8       LOAD_GLOBAL                     0: _STATE
+                18      CONTAINS_OP                     0 (in)
+                20      POP_JUMP_IF_FALSE               9 (to 40)
+                22      LOAD_GLOBAL                     0: _STATE
+                32      LOAD_CONST                      1: 'url'
+                34      BINARY_SUBSCR                   
+                38      RETURN_VALUE                    
+                40      LOAD_FAST                       0: data_dir
+                42      LOAD_GLOBAL                     2: os
+                52      LOAD_ATTR                       4: environ
+                72      LOAD_CONST                      2: 'CHANDRA_DATA'
+                74      STORE_SUBSCR                    
+                78      LOAD_GLOBAL                     2: os
+                88      LOAD_ATTR                       4: environ
+                108     LOAD_ATTR                       7: setdefault
+                128     LOAD_CONST                      3: 'HOME'
+                130     LOAD_FAST                       0: data_dir
+                132     CALL                            2
+                140     POP_TOP                         
+                142     LOAD_CONST                      4: '1'
+                144     LOAD_GLOBAL                     2: os
+                154     LOAD_ATTR                       4: environ
+                174     LOAD_CONST                      5: 'CHANDRA_NO_SUPERVISE'
+                176     STORE_SUBSCR                    
+                180     LOAD_CONST                      6: 0
+                182     LOAD_CONST                      7: None
+                184     IMPORT_NAME                     4: chandra
+                186     STORE_FAST                      2: chandra
+                188     LOAD_CONST                      6: 0
+                190     LOAD_CONST                      8: ('ThreadingHTTPServer',)
+                192     IMPORT_NAME                     5: http.server
+                194     IMPORT_FROM                     6: ThreadingHTTPServer
+                196     STORE_FAST                      3: ThreadingHTTPServer
+                198     POP_TOP                         
+                200     LOAD_GLOBAL                     15: NULL + Path
+                210     LOAD_FAST                       1: assets_dir
+                212     CALL                            1
+                220     LOAD_FAST                       2: chandra
+                222     STORE_ATTR                      8: HERE
+                232     LOAD_GLOBAL                     18: _clip_get
+                242     LOAD_GLOBAL                     20: _clip_set
+                252     SWAP                            2
+                254     LOAD_FAST                       2: chandra
+                256     STORE_ATTR                      9: _clip_get
+                266     LOAD_FAST                       2: chandra
+                268     STORE_ATTR                      10: _clip_set
+                278     LOAD_GLOBAL                     22: _no_pc
+                288     COPY                            1
+                290     LOAD_FAST                       2: chandra
+                292     STORE_ATTR                      12: _gui
+                302     LOAD_FAST                       2: chandra
+                304     STORE_ATTR                      13: _grab
+                314     LOAD_GLOBAL                     28: _open_url
+                324     LOAD_FAST                       2: chandra
+                326     LOAD_ATTR                       30: TOOLS
+                346     LOAD_CONST                      9: 'open_url'
+                348     STORE_SUBSCR                    
+                352     LOAD_GLOBAL                     32: _open_app
+                362     LOAD_FAST                       2: chandra
+                364     LOAD_ATTR                       30: TOOLS
+                384     LOAD_CONST                      10: 'open_app'
+                386     STORE_SUBSCR                    
+                390     LOAD_CONST                      11: ('run_shell', 'power', 'set_volume', 'set_brightness', 'list_windows', 'focus_window')
+                392     GET_ITER                        
+                394     FOR_ITER                        36 (to 468)
+                398     STORE_FAST                      4: name
+                400     LOAD_FAST                       4: name
+                402     LOAD_FAST                       2: chandra
+                404     LOAD_ATTR                       30: TOOLS
+                424     CONTAINS_OP                     0 (in)
+                426     POP_JUMP_IF_TRUE                1 (to 430)
+                428     JUMP_BACKWARD                   18 (to 394)
+                430     LOAD_GLOBAL                     22: _no_pc
+                440     LOAD_FAST                       2: chandra
+                442     LOAD_ATTR                       30: TOOLS
+                462     LOAD_FAST                       4: name
+                464     STORE_SUBSCR                    
+                468     JUMP_BACKWARD                   38 (to 394)
+                470     END_FOR                         
+                472     LOAD_CONST                      12: <CODE> <lambda>
+                474     MAKE_FUNCTION                   0
+                476     LOAD_FAST                       2: chandra
+                478     LOAD_ATTR                       34: webbrowser
+                498     STORE_ATTR                      18: open
+                508     LOAD_CONST                      6: 0
+                510     LOAD_CONST                      7: None
+                512     IMPORT_NAME                     19: android_shim
+                514     STORE_DEREF                     7: android_shim
+                516     LOAD_FAST                       2: chandra
+                518     LOAD_ATTR                       40: app_html
+                538     STORE_DEREF                     8: page
+                540     LOAD_CLOSURE                    7: android_shim
+                542     LOAD_CLOSURE                    8: page
+                544     BUILD_TUPLE                     2
+                546     LOAD_CONST                      13: <CODE> <lambda>
+                548     MAKE_FUNCTION                   8
+                550     LOAD_FAST                       2: chandra
+                552     STORE_ATTR                      20: app_html
+                562     LOAD_FAST                       2: chandra
+                564     LOAD_ATTR                       43: load_env
+                584     CALL                            0
+                592     POP_TOP                         
+                594     LOAD_FAST                       2: chandra
+                596     LOAD_ATTR                       44: CFG
+                616     LOAD_ATTR                       47: update
+                636     LOAD_CONST                      14: False
+                638     LOAD_CONST                      14: False
+                640     LOAD_FAST                       2: chandra
+                642     LOAD_ATTR                       49: pairing_code
+                662     CALL                            0
+                670     KW_NAMES                        15: ('shell', 'native', 'token')
+                672     CALL                            3
+                680     POP_TOP                         
+                682     LOAD_FAST                       2: chandra
+                684     LOAD_ATTR                       51: start_log
+                704     LOAD_CONST                      16: 'launch %s on Android'
+                706     LOAD_FAST                       2: chandra
+                708     LOAD_ATTR                       52: APP_VERSION
+                728     BINARY_OP                       6 (%)
+                732     CALL                            1
+                740     POP_TOP                         
+                742     LOAD_CONST                      7: None
+                744     STORE_FAST                      5: srv
+                746     LOAD_GLOBAL                     55: NULL + range
+                756     LOAD_CONST                      17: 8765
+                758     LOAD_CONST                      18: 8785
+                760     CALL                            2
+                768     GET_ITER                        
+                770     FOR_ITER                        25 (to 822)
+                774     STORE_FAST                      6: port
+                776     NOP                             
+                778     PUSH_NULL                       
+                780     LOAD_FAST                       3: ThreadingHTTPServer
+                782     LOAD_CONST                      19: '127.0.0.1'
+                784     LOAD_FAST                       6: port
+                786     BUILD_TUPLE                     2
+                788     LOAD_FAST                       2: chandra
+                790     LOAD_ATTR                       56: H
+                810     CALL                            2
+                818     STORE_FAST                      5: srv
+                820     POP_TOP                         
+                822     JUMP_FORWARD                    1 (to 826)
+                824     END_FOR                         
+                826     LOAD_FAST                       5: srv
+                828     POP_JUMP_IF_NOT_NONE            11 (to 852)
+                830     LOAD_GLOBAL                     61: NULL + RuntimeError
+                840     LOAD_CONST                      20: "No free port for Chandra's host"
+                842     CALL                            1
+                850     RAISE_VARARGS                   1
+                852     LOAD_FAST_CHECK                 6: port
+                854     LOAD_FAST                       2: chandra
+                856     LOAD_ATTR                       44: CFG
+                876     LOAD_CONST                      21: 'port'
+                878     STORE_SUBSCR                    
+                882     LOAD_GLOBAL                     63: NULL + threading
+                892     LOAD_ATTR                       64: Thread
+                912     LOAD_FAST                       5: srv
+                914     LOAD_ATTR                       66: serve_forever
+                934     LOAD_CONST                      22: True
+                936     LOAD_CONST                      23: 'chandra-host'
+                938     KW_NAMES                        24: ('target', 'daemon', 'name')
+                940     CALL                            3
+                948     LOAD_ATTR                       69: start
+                968     CALL                            0
+                976     POP_TOP                         
+                978     LOAD_CONST                      25: 'http://127.0.0.1:%d/app/%s'
+                980     LOAD_FAST                       6: port
+                982     LOAD_FAST                       2: chandra
+                984     LOAD_ATTR                       44: CFG
+                1004    LOAD_CONST                      26: 'token'
+                1006    BINARY_SUBSCR                   
+                1010    BUILD_TUPLE                     2
+                1012    BINARY_OP                       6 (%)
+                1016    LOAD_GLOBAL                     0: _STATE
+                1026    LOAD_CONST                      1: 'url'
+                1028    STORE_SUBSCR                    
+                1032    LOAD_GLOBAL                     0: _STATE
+                1042    LOAD_CONST                      1: 'url'
+                1044    BINARY_SUBSCR                   
+                1048    RETURN_VALUE                    
+                1050    PUSH_EXC_INFO                   
+                1052    LOAD_GLOBAL                     58: OSError
+                1062    CHECK_EXC_MATCH                 
+                1064    POP_JUMP_IF_FALSE               3 (to 1072)
+                1066    POP_TOP                         
+                1068    POP_EXCEPT                      
+                1070    JUMP_BACKWARD                   151 (to 770)
+                1072    RERAISE                         0
+                1074    COPY                            3
+                1076    POP_EXCEPT                      
+                1078    RERAISE                         1
+            [Exception Table]
+                778 to 820 -> 1050 [1] 
+                1050 to 1068 -> 1074 [2] lasti
+                1072 to 1074 -> 1074 [2] lasti
+    [Disassembly]
+        0       RESUME                          0
+        2       LOAD_CONST                      0: "Chandra for Android: runs the desktop host (chandra.py, unchanged) inside the app.\n\nMainActivity calls start(); the host serves the same page and the same routes as the desktop app's\nbrowser mode (/brain, /tts, /stt, /image, /artifacts, /memory/search, /act for web tools ...) on\n127.0.0.1 only, behind the pairing code. Only the pieces that need a PC are swapped for Android ones:\nthe clipboard and opening links use Android; mouse, keyboard and screen control say they need a computer.\n"
+        4       STORE_NAME                      0: __doc__
+        6       LOAD_CONST                      1: 0
+        8       LOAD_CONST                      2: None
+        10      IMPORT_NAME                     1: os
+        12      STORE_NAME                      1: os
+        14      LOAD_CONST                      1: 0
+        16      LOAD_CONST                      2: None
+        18      IMPORT_NAME                     2: threading
+        20      STORE_NAME                      2: threading
+        22      LOAD_CONST                      1: 0
+        24      LOAD_CONST                      3: ('Path',)
+        26      IMPORT_NAME                     3: pathlib
+        28      IMPORT_FROM                     4: Path
+        30      STORE_NAME                      4: Path
+        32      POP_TOP                         
+        34      LOAD_CONST                      4: "That needs Chandra on a computer: a phone can't be driven by mouse, keyboard or screen control."
+        36      STORE_NAME                      5: PHONE_ONLY
+        38      BUILD_MAP                       0
+        40      STORE_NAME                      6: _STATE
+        42      LOAD_CONST                      5: <CODE> _android
+        44      MAKE_FUNCTION                   0
+        46      STORE_NAME                      7: _android
+        48      LOAD_CONST                      6: <CODE> _clip_get
+        50      MAKE_FUNCTION                   0
+        52      STORE_NAME                      8: _clip_get
+        54      LOAD_CONST                      7: <CODE> _clip_set
+        56      MAKE_FUNCTION                   0
+        58      STORE_NAME                      9: _clip_set
+        60      LOAD_CONST                      8: <CODE> _open_url
+        62      MAKE_FUNCTION                   0
+        64      STORE_NAME                      10: _open_url
+        66      LOAD_CONST                      9: <CODE> _open_app
+        68      MAKE_FUNCTION                   0
+        70      STORE_NAME                      11: _open_app
+        72      LOAD_CONST                      10: <CODE> _no_pc
+        74      MAKE_FUNCTION                   0
+        76      STORE_NAME                      12: _no_pc
+        78      LOAD_CONST                      11: <CODE> start
+        80      MAKE_FUNCTION                   0
+        82      STORE_NAME                      13: start
+        84      RETURN_CONST                    2: None
+    [Exception Table]

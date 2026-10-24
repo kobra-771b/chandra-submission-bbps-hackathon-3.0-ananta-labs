@@ -1,0 +1,84 @@
+android_shim.pyc (Python 3.12)
+[Code]
+    File Name: android_shim.py
+    Object Name: <module>
+    Qualified Name: <module>
+    Arg Count: 0
+    Pos Only Arg Count: 0
+    KW Only Arg Count: 0
+    Stack Size: 1
+    Flags: 0x00000000
+    [Names]
+        '__doc__'
+        'SHIM'
+        'inject'
+    [Locals+Names]
+    [Constants]
+        "The first script on Chandra's page inside the Android app (window.ChandraAndroid is MainActivity's bridge).\n\n- Saving a file (the page clicks a blob:/data: link with a download name): Android writes it to Downloads/Chandra.\n- The device voice: the WebView's speechSynthesis is silent on most phones, so speech goes to Android's text-to-speech.\n- Speech in: the WebView's SpeechRecognition never works, so the wake word and listening use Android's recogniser.\n"
+        '<script data-src="android-shim">(function(){\nvar A=window.ChandraAndroid;if(!A)return;window.CHANDRA_ANDROID=true;\nvar click=HTMLAnchorElement.prototype.click;\nHTMLAnchorElement.prototype.click=function(){\n  var h=this.href||"",name=this.getAttribute("download");\n  if(name!==null&&/^(blob:|data:)/.test(h)){\n    fetch(h).then(function(r){return r.blob()}).then(function(b){\n      var fr=new FileReader();fr.onload=function(){var s=String(fr.result);A.saveFile(name||"download",b.type||"application/octet-stream",s.slice(s.indexOf(",")+1))};fr.readAsDataURL(b)\n    }).catch(function(e){A.toast("Could not save "+(name||"the file"))});return\n  }\n  return click.apply(this,arguments)\n};\nvar voices=[],pending={},seq=0,ls={};\nfunction fire(t){(ls[t]||[]).forEach(function(f){try{f({type:t})}catch(_){}});var h=syn["on"+t];if(h)try{h({type:t})}catch(_){}}\nfunction done(u,ev){var h=ev==="error"?(u.onerror||u.onend):u.onend;if(h)try{h({type:ev,utterance:u,error:ev==="error"?"synthesis-failed":undefined})}catch(_){}}\nvar syn={speaking:false,pending:false,paused:false,onvoiceschanged:null,\n  getVoices:function(){return voices.slice()},\n  speak:function(u){var id="u"+(++seq);pending[id]=u;syn.speaking=true;\n    A.ttsSpeak(id,String(u.text||""),(u.voice&&u.voice.name)||"",String(u.lang||""),+u.rate||1,+u.pitch||1,u.volume==null?1:+u.volume)},\n  cancel:function(){var p=pending;pending={};syn.speaking=false;A.ttsStop();Object.keys(p).forEach(function(k){setTimeout(function(){done(p[k],"end")},0)})},\n  pause:function(){},resume:function(){},\n  addEventListener:function(t,f){(ls[t]=ls[t]||[]).push(f)},\n  removeEventListener:function(t,f){ls[t]=(ls[t]||[]).filter(function(g){return g!==f})}};\nwindow.__chandraTts=function(id,ev){var u=pending[id];if(!u)return;\n  if(ev==="start"){if(u.onstart)try{u.onstart({type:"start",utterance:u})}catch(_){}return}\n  delete pending[id];syn.speaking=Object.keys(pending).length>0;done(u,ev)};\nwindow.__chandraVoices=function(list){voices=(list||[]).map(function(v){return{name:v.name,lang:v.lang,voiceURI:v.name,localService:true,"default":!!v.def}});fire("voiceschanged")};\ntry{window.__chandraVoices(JSON.parse(A.ttsVoices()||"[]"))}catch(_){}\ntry{Object.defineProperty(window,"speechSynthesis",{value:syn,configurable:true})}catch(_){window.speechSynthesis=syn}\n/* our own utterance: the native one refuses voices that are not the WebView\'s own */\nwindow.SpeechSynthesisUtterance=function(t){this.text=t||"";this.lang="";this.rate=1;this.pitch=1;this.volume=1;this.voice=null;this.onstart=this.onend=this.onerror=this.onboundary=null};\n/* speech in: the WebView\'s SpeechRecognition fails with "not-allowed" on Android, so recognition goes to Android\'s recogniser.\n   A session ends after each pause (the page starts the next one); after errors the next start waits longer, up to 15 s. */\nvar recs={},rseq=0,fails=0,live=0,lastEnd=0;\nfunction arr(a){a.item=function(i){return a[i]};return a}\nfunction finish(r){var id=r._id;if(!id)return;delete recs[id];r._id=null;live=Math.max(0,live-1);lastEnd=Date.now();r._fire("end")}\nfunction SR(){this.lang="";this.continuous=false;this.interimResults=false;this.maxAlternatives=1;this._ls={};this._id=null;this._t=0;\n  this.onstart=this.onend=this.onerror=this.onresult=this.onnomatch=this.onaudiostart=this.onaudioend=this.onsoundstart=this.onsoundend=this.onspeechstart=this.onspeechend=null}\nSR.prototype.addEventListener=function(t,f){(this._ls[t]=this._ls[t]||[]).push(f)};\nSR.prototype.removeEventListener=function(t,f){this._ls[t]=(this._ls[t]||[]).filter(function(g){return g!==f})};\nSR.prototype._fire=function(t,e){var me=this;e=e||{};e.type=t;e.target=me;\n  (me._ls[t]||[]).slice().forEach(function(f){try{f.call(me,e)}catch(_){}});var h=me["on"+t];if(h)try{h.call(me,e)}catch(_){}};\nSR.prototype.start=function(){if(this._id)throw new DOMException("recognition has already started","InvalidStateError");\n  var me=this,id="r"+(++rseq),wait=fails?Math.min(15000,1000*Math.pow(2,fails-1)):0;me._id=id;me._res=[];recs[id]=me;live++;\n  me._t=setTimeout(function(){me._t=0;if(me._id===id)A.srStart(id,String(me.lang||""),!!me.interimResults,Math.max(1,+me.maxAlternatives||1))},wait)};\nSR.prototype.stop=function(){if(!this._id)return;if(this._t){var me=this;clearTimeout(me._t);me._t=0;setTimeout(function(){finish(me)},0);return}A.srStop(this._id)};\nSR.prototype.abort=function(){if(!this._id)return;if(this._t){var me=this;clearTimeout(me._t);me._t=0;setTimeout(function(){finish(me)},0);return}A.srAbort(this._id)};\nwindow.__chandraSr=function(id,ev,d){var r=recs[id];if(!r)return;\n  if(ev==="start"){r._fire("start");r._fire("audiostart");return}\n  if(ev==="result"){fails=0;var res=arr((d.alts||[]).map(function(a){return{transcript:String(a.t||""),confidence:+a.c||0}}));res.isFinal=!!d.final;\n    var L=r._res,i=L.length&&!L[L.length-1].isFinal?L.length-1:L.length;L[i]=res;r._fire("result",{resultIndex:i,results:arr(L.slice())});return}\n  if(ev==="error"){if(d!=="no-speech")fails++;r._fire("error",{error:d,message:""});return}\n  if(ev==="end"){finish(r);return}\n  r._fire(ev)};\n[["SpeechRecognition",SR],["webkitSpeechRecognition",SR]].forEach(function(p){try{Object.defineProperty(window,p[0],{value:p[1],configurable:true,writable:true})}catch(_){window[p[0]]=p[1]}});\n/* the WebView always answers "prompt" for the microphone, so the voice visualiser never opened it. While Android\'s recogniser\n   has the mic it still says "prompt": a second recording beside it would starve the recogniser */\nvar P=navigator.permissions;\nif(P&&P.query){var q0=P.query.bind(P);P.query=function(d){\n  if(!d||d.name!=="microphone")return q0(d);\n  return new Promise(function(ok){setTimeout(function(){var st=String(A.micState());if(st==="granted"&&(live>0||Date.now()-lastEnd<1500))st="prompt";\n    ok({name:"microphone",state:st,onchange:null,addEventListener:function(){},removeEventListener:function(){}})},0)})}}\n})();</script>'
+        [Code]
+            File Name: android_shim.py
+            Object Name: inject
+            Qualified Name: inject
+            Arg Count: 1
+            Pos Only Arg Count: 0
+            KW Only Arg Count: 0
+            Stack Size: 4
+            Flags: 0x00000003 (CO_OPTIMIZED | CO_NEWLOCALS)
+            [Names]
+                'find'
+                'SHIM'
+                'len'
+            [Locals+Names]
+                'page'
+                'i'
+            [Constants]
+                None
+                '<head>'
+                0
+            [Disassembly]
+                0       RESUME                          0
+                2       LOAD_FAST                       0: page
+                4       LOAD_ATTR                       1: find
+                24      LOAD_CONST                      1: '<head>'
+                26      CALL                            1
+                34      STORE_FAST                      1: i
+                36      LOAD_FAST                       1: i
+                38      LOAD_CONST                      2: 0
+                40      COMPARE_OP                      2 (<)
+                44      POP_JUMP_IF_FALSE               9 (to 64)
+                46      LOAD_GLOBAL                     2: SHIM
+                56      LOAD_FAST                       0: page
+                58      BINARY_OP                       0 (+)
+                62      RETURN_VALUE                    
+                64      LOAD_FAST                       1: i
+                66      LOAD_GLOBAL                     5: NULL + len
+                76      LOAD_CONST                      1: '<head>'
+                78      CALL                            1
+                86      BINARY_OP                       13 (+=)
+                90      STORE_FAST                      1: i
+                92      LOAD_FAST                       0: page
+                94      LOAD_CONST                      0: None
+                96      LOAD_FAST                       1: i
+                98      BINARY_SLICE                    
+                100     LOAD_GLOBAL                     2: SHIM
+                110     BINARY_OP                       0 (+)
+                114     LOAD_FAST                       0: page
+                116     LOAD_FAST                       1: i
+                118     LOAD_CONST                      0: None
+                120     BINARY_SLICE                    
+                122     BINARY_OP                       0 (+)
+                126     RETURN_VALUE                    
+            [Exception Table]
+        None
+    [Disassembly]
+        0       RESUME                          0
+        2       LOAD_CONST                      0: "The first script on Chandra's page inside the Android app (window.ChandraAndroid is MainActivity's bridge).\n\n- Saving a file (the page clicks a blob:/data: link with a download name): Android writes it to Downloads/Chandra.\n- The device voice: the WebView's speechSynthesis is silent on most phones, so speech goes to Android's text-to-speech.\n- Speech in: the WebView's SpeechRecognition never works, so the wake word and listening use Android's recogniser.\n"
+        4       STORE_NAME                      0: __doc__
+        6       LOAD_CONST                      1: '<script data-src="android-shim">(function(){\nvar A=window.ChandraAndroid;if(!A)return;window.CHANDRA_ANDROID=true;\nvar click=HTMLAnchorElement.prototype.click;\nHTMLAnchorElement.prototype.click=function(){\n  var h=this.href||"",name=this.getAttribute("download");\n  if(name!==null&&/^(blob:|data:)/.test(h)){\n    fetch(h).then(function(r){return r.blob()}).then(function(b){\n      var fr=new FileReader();fr.onload=function(){var s=String(fr.result);A.saveFile(name||"download",b.type||"application/octet-stream",s.slice(s.indexOf(",")+1))};fr.readAsDataURL(b)\n    }).catch(function(e){A.toast("Could not save "+(name||"the file"))});return\n  }\n  return click.apply(this,arguments)\n};\nvar voices=[],pending={},seq=0,ls={};\nfunction fire(t){(ls[t]||[]).forEach(function(f){try{f({type:t})}catch(_){}});var h=syn["on"+t];if(h)try{h({type:t})}catch(_){}}\nfunction done(u,ev){var h=ev==="error"?(u.onerror||u.onend):u.onend;if(h)try{h({type:ev,utterance:u,error:ev==="error"?"synthesis-failed":undefined})}catch(_){}}\nvar syn={speaking:false,pending:false,paused:false,onvoiceschanged:null,\n  getVoices:function(){return voices.slice()},\n  speak:function(u){var id="u"+(++seq);pending[id]=u;syn.speaking=true;\n    A.ttsSpeak(id,String(u.text||""),(u.voice&&u.voice.name)||"",String(u.lang||""),+u.rate||1,+u.pitch||1,u.volume==null?1:+u.volume)},\n  cancel:function(){var p=pending;pending={};syn.speaking=false;A.ttsStop();Object.keys(p).forEach(function(k){setTimeout(function(){done(p[k],"end")},0)})},\n  pause:function(){},resume:function(){},\n  addEventListener:function(t,f){(ls[t]=ls[t]||[]).push(f)},\n  removeEventListener:function(t,f){ls[t]=(ls[t]||[]).filter(function(g){return g!==f})}};\nwindow.__chandraTts=function(id,ev){var u=pending[id];if(!u)return;\n  if(ev==="start"){if(u.onstart)try{u.onstart({type:"start",utterance:u})}catch(_){}return}\n  delete pending[id];syn.speaking=Object.keys(pending).length>0;done(u,ev)};\nwindow.__chandraVoices=function(list){voices=(list||[]).map(function(v){return{name:v.name,lang:v.lang,voiceURI:v.name,localService:true,"default":!!v.def}});fire("voiceschanged")};\ntry{window.__chandraVoices(JSON.parse(A.ttsVoices()||"[]"))}catch(_){}\ntry{Object.defineProperty(window,"speechSynthesis",{value:syn,configurable:true})}catch(_){window.speechSynthesis=syn}\n/* our own utterance: the native one refuses voices that are not the WebView\'s own */\nwindow.SpeechSynthesisUtterance=function(t){this.text=t||"";this.lang="";this.rate=1;this.pitch=1;this.volume=1;this.voice=null;this.onstart=this.onend=this.onerror=this.onboundary=null};\n/* speech in: the WebView\'s SpeechRecognition fails with "not-allowed" on Android, so recognition goes to Android\'s recogniser.\n   A session ends after each pause (the page starts the next one); after errors the next start waits longer, up to 15 s. */\nvar recs={},rseq=0,fails=0,live=0,lastEnd=0;\nfunction arr(a){a.item=function(i){return a[i]};return a}\nfunction finish(r){var id=r._id;if(!id)return;delete recs[id];r._id=null;live=Math.max(0,live-1);lastEnd=Date.now();r._fire("end")}\nfunction SR(){this.lang="";this.continuous=false;this.interimResults=false;this.maxAlternatives=1;this._ls={};this._id=null;this._t=0;\n  this.onstart=this.onend=this.onerror=this.onresult=this.onnomatch=this.onaudiostart=this.onaudioend=this.onsoundstart=this.onsoundend=this.onspeechstart=this.onspeechend=null}\nSR.prototype.addEventListener=function(t,f){(this._ls[t]=this._ls[t]||[]).push(f)};\nSR.prototype.removeEventListener=function(t,f){this._ls[t]=(this._ls[t]||[]).filter(function(g){return g!==f})};\nSR.prototype._fire=function(t,e){var me=this;e=e||{};e.type=t;e.target=me;\n  (me._ls[t]||[]).slice().forEach(function(f){try{f.call(me,e)}catch(_){}});var h=me["on"+t];if(h)try{h.call(me,e)}catch(_){}};\nSR.prototype.start=function(){if(this._id)throw new DOMException("recognition has already started","InvalidStateError");\n  var me=this,id="r"+(++rseq),wait=fails?Math.min(15000,1000*Math.pow(2,fails-1)):0;me._id=id;me._res=[];recs[id]=me;live++;\n  me._t=setTimeout(function(){me._t=0;if(me._id===id)A.srStart(id,String(me.lang||""),!!me.interimResults,Math.max(1,+me.maxAlternatives||1))},wait)};\nSR.prototype.stop=function(){if(!this._id)return;if(this._t){var me=this;clearTimeout(me._t);me._t=0;setTimeout(function(){finish(me)},0);return}A.srStop(this._id)};\nSR.prototype.abort=function(){if(!this._id)return;if(this._t){var me=this;clearTimeout(me._t);me._t=0;setTimeout(function(){finish(me)},0);return}A.srAbort(this._id)};\nwindow.__chandraSr=function(id,ev,d){var r=recs[id];if(!r)return;\n  if(ev==="start"){r._fire("start");r._fire("audiostart");return}\n  if(ev==="result"){fails=0;var res=arr((d.alts||[]).map(function(a){return{transcript:String(a.t||""),confidence:+a.c||0}}));res.isFinal=!!d.final;\n    var L=r._res,i=L.length&&!L[L.length-1].isFinal?L.length-1:L.length;L[i]=res;r._fire("result",{resultIndex:i,results:arr(L.slice())});return}\n  if(ev==="error"){if(d!=="no-speech")fails++;r._fire("error",{error:d,message:""});return}\n  if(ev==="end"){finish(r);return}\n  r._fire(ev)};\n[["SpeechRecognition",SR],["webkitSpeechRecognition",SR]].forEach(function(p){try{Object.defineProperty(window,p[0],{value:p[1],configurable:true,writable:true})}catch(_){window[p[0]]=p[1]}});\n/* the WebView always answers "prompt" for the microphone, so the voice visualiser never opened it. While Android\'s recogniser\n   has the mic it still says "prompt": a second recording beside it would starve the recogniser */\nvar P=navigator.permissions;\nif(P&&P.query){var q0=P.query.bind(P);P.query=function(d){\n  if(!d||d.name!=="microphone")return q0(d);\n  return new Promise(function(ok){setTimeout(function(){var st=String(A.micState());if(st==="granted"&&(live>0||Date.now()-lastEnd<1500))st="prompt";\n    ok({name:"microphone",state:st,onchange:null,addEventListener:function(){},removeEventListener:function(){}})},0)})}}\n})();</script>'
+        8       STORE_NAME                      1: SHIM
+        10      LOAD_CONST                      2: <CODE> inject
+        12      MAKE_FUNCTION                   0
+        14      STORE_NAME                      2: inject
+        16      RETURN_CONST                    3: None
+    [Exception Table]

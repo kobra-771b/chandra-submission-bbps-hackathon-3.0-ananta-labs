@@ -1,0 +1,9 @@
+package labs.ananta.chandra;
+public final class R$string {
+    public static int app_name = 2130903040;
+
+    private R$string()
+    {
+        return;
+    }
+}

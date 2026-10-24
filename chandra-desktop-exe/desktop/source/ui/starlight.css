@@ -1,0 +1,117 @@
+/* ============ Starlight: Chandra 1.3's skin ============
+   Deep space, led by blue, a little periwinkle (never the lead) and star colour for the one light source.
+   Everything here is scoped to html[data-skin=starlight]; Settings > Interface > Look switches back to the
+   Classic black skin, which is the 1.2 page untouched. The page carries many older style layers that use
+   !important, so the rules below are deliberately specific and use !important where they must win.
+
+   Palette (one place):
+     space   #02040b  #050a1a  #0a1430  #101c40
+     blue    #3d6bff (signal)  #6f95ff (lit)  #2f5bff (deep)
+     ice     #a8d4ff              periwinkle #8e8cff (accent only)
+     star    #fff3d1 (warm)  #f4f7ff (cool)        text #eef2ff */
+/* @src starlight.css: Starlight skin tokens and surfaces */
+html[data-skin=starlight]{
+ --sl-0:#02040b;--sl-1:#050a1a;--sl-2:#0a1430;--sl-3:#101c40;
+ --sl-blue:#3d6bff;--sl-blue2:#6f95ff;--sl-deep:#2f5bff;--sl-ice:#a8d4ff;--sl-peri:#8e8cff;--sl-star:#fff3d1;--sl-star2:#f4f7ff;
+ --sl-tx:#eef2ff;--sl-mu:rgba(214,224,255,.68);--sl-dim:rgba(200,214,255,.44);
+ --sl-line:rgba(124,156,255,.14);--sl-line2:rgba(124,156,255,.24);--sl-line3:rgba(150,180,255,.38);
+ --sl-glass:linear-gradient(165deg,rgba(111,149,255,.11),rgba(111,149,255,.025) 42%,rgba(142,140,255,.03) 70%,rgba(168,212,255,.06)),rgba(6,12,32,.62);
+ --sl-glass-solid:rgba(7,13,34,.94);
+ --sl-btn:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,0) 58%),linear-gradient(135deg,#3d6bff,#6f95ff 62%,#8e8cff);
+ --sl-glow:0 10px 30px -10px rgba(61,107,255,.75),0 0 0 1px rgba(168,212,255,.18);
+ background:var(--sl-0)!important;color:var(--sl-tx)!important;
+ /* the 1.2 design layer's tokens, re-pointed */
+ --ch-bg:#02040b;--ch-s1:#060c20;--ch-s2:#0a1430;--ch-s3:#101c40;
+ --ch-line:rgba(124,156,255,.13);--ch-line2:rgba(124,156,255,.22);--ch-line3:rgba(150,180,255,.36);
+ --ch-tx:#eef2ff;--ch-mu:rgba(214,224,255,.68);--ch-dim:rgba(200,214,255,.44);
+ --ch-silver:#dfe7ff;--ch-blue:#6f95ff;--ch-blue-ink:#a8d4ff;--ch-blue-wash:rgba(61,107,255,.16);--ch-champ:#fff3d1;
+ --ch-focus:0 0 0 2px rgba(168,212,255,.7);
+ --ch-shadow:0 24px 60px -24px rgba(0,2,12,.95),0 2px 8px rgba(0,2,12,.5)}
+html[data-skin=starlight] body,html[data-skin=starlight] body[data-theme],html[data-skin=starlight] body[data-theme=dark]{
+ background:transparent!important;color:var(--sl-tx)!important;
+ --tx:#eef2ff!important;--mu:rgba(214,224,255,.68)!important;--dim:rgba(200,214,255,.44)!important;--tint:rgba(16,30,80,.22)!important;
+ --c:#a8d4ff!important;--g:#a8d4ff!important;--v:#8e8cff!important;--b:#3d6bff!important;
+ --rim:linear-gradient(135deg,rgba(190,212,255,.42),rgba(111,149,255,.1) 28%,rgba(111,149,255,.03) 62%,rgba(168,212,255,.24))!important}
+html[data-skin=starlight] ::selection{background:rgba(61,107,255,.42)!important;color:#fff!important}
+html[data-skin=starlight] :focus-visible{outline-color:rgba(168,212,255,.8)!important}
+html[data-skin=starlight] input,html[data-skin=starlight] textarea{caret-color:var(--sl-ice)!important}
+
+/* ---------- the sky: Gradient ASCII horizon behind everything ---------- */
+html[data-skin=starlight] .aura{background:#02040b!important}
+html[data-skin=starlight] .aura canvas#liq,html[data-skin=starlight] .aura b{display:none!important}
+html[data-skin=starlight] .aura:before,html[data-skin=starlight] .aura:after,html[data-skin=starlight] #eclipse-orbit{display:none!important}   /* no arcs over the sky: its own dark arc is the horizon */
+#sky{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity 1.6s var(--ch-ease)}
+#sky.on{opacity:1}
+#sky .gradient-ascii-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#sky.gradient-ascii-fallback{opacity:1;background:radial-gradient(120% 60% at 50% -8%,rgba(168,212,255,.32),rgba(61,107,255,.22) 38%,rgba(10,26,79,.2) 58%,transparent 72%)}
+html:not([data-skin=starlight]) #sky,html:not([data-skin=starlight]) .corona{display:none!important}
+html[data-skin=starlight] .stars i{background:#f4f7ff}
+html[data-skin=starlight] .stars i:nth-child(5n){background:#fff3d1}
+html[data-skin=starlight] .stars i:nth-child(7n){background:#a8d4ff}
+
+/* ---------- the moon mark: an ASCII eclipse corona around it ---------- */
+.stage .corona{position:absolute;left:50%;top:50%;width:200%;height:200%;transform:translate(-50%,-50%);pointer-events:none;z-index:-1;
+ -webkit-mask:radial-gradient(closest-side,#000 70%,transparent 100%);mask:radial-gradient(closest-side,#000 70%,transparent 100%)}
+.stage .corona .gradient-ascii-canvas{position:absolute;inset:0;width:100%;height:100%}
+.stage .corona.gradient-ascii-fallback{background:radial-gradient(closest-side,transparent 44%,rgba(111,149,255,.35) 47%,rgba(61,107,255,.12) 60%,transparent 80%)}
+html[data-skin=starlight] .stage svg circle[stroke="url(#og)"]{stroke:rgba(168,212,255,.6)}
+html[data-skin=starlight] .stage .rg line{stroke:rgba(111,149,255,.5)}
+html[data-skin=starlight] .hero{filter:drop-shadow(0 0 30px rgba(111,149,255,.38))!important}
+html[data-skin=starlight][data-phase=thinking] .hero,html[data-skin=starlight][data-phase=working] .hero{filter:drop-shadow(0 0 40px rgba(111,149,255,.6))!important}
+html[data-skin=starlight][data-phase=speaking] .hero{filter:drop-shadow(0 0 44px rgba(255,243,209,.5))!important}
+
+/* ---------- glass surfaces ---------- */
+html[data-skin=starlight] .g{background:var(--sl-glass)!important;-webkit-backdrop-filter:blur(16px) saturate(1.5)!important;backdrop-filter:blur(16px) saturate(1.5)!important;
+ box-shadow:inset 0 1px 0 rgba(190,212,255,.12),inset 0 0 0 1px rgba(124,156,255,.13),0 22px 50px -24px rgba(0,2,14,.95)!important}
+html[data-skin=starlight] .card,html[data-skin=starlight] .panel,html[data-skin=starlight] .surface,html[data-skin=starlight] .modal,html[data-skin=starlight] .sheet{border-color:var(--sl-line)!important}
+html[data-skin=starlight] .sheet,html[data-skin=starlight] #menu{background:var(--sl-glass-solid)!important}
+html[data-skin=starlight] #thr{background:linear-gradient(180deg,rgba(10,20,52,.62),rgba(5,10,26,.55))!important}
+html[data-skin=starlight] #thl button,html[data-skin=starlight] #thl .row{border-color:var(--sl-line)!important}
+html[data-skin=starlight] #thl [aria-current=true],html[data-skin=starlight] #thl .on{background:rgba(61,107,255,.16)!important;box-shadow:inset 0 0 0 1px rgba(124,156,255,.3)!important}
+
+/* ---------- navigation ---------- */
+html[data-skin=starlight] #nav button,html[data-skin=starlight] .ib{color:rgba(206,220,255,.7)!important}
+html[data-skin=starlight] #nav button:hover,html[data-skin=starlight] .ib:hover{color:#fff!important;background:rgba(111,149,255,.14)!important}
+html[data-skin=starlight] #nav button[aria-current=true]{color:#fff!important;background:var(--sl-btn)!important;box-shadow:inset 0 1px 1px rgba(255,255,255,.55),var(--sl-glow)!important}
+
+/* ---------- buttons and chips ---------- */
+html[data-skin=starlight] .btn,html[data-skin=starlight] .chip{background:linear-gradient(180deg,rgba(111,149,255,.12),rgba(111,149,255,.02)),rgba(6,12,32,.55)!important;color:#e4ecff!important;
+ box-shadow:inset 0 0 0 1px rgba(124,156,255,.2),inset 0 1px 0 rgba(190,212,255,.1)!important}
+html[data-skin=starlight] .btn:hover,html[data-skin=starlight] .chip:hover{background:linear-gradient(180deg,rgba(111,149,255,.22),rgba(111,149,255,.05)),rgba(8,16,42,.7)!important;box-shadow:inset 0 0 0 1px rgba(150,180,255,.36),0 8px 22px -12px rgba(61,107,255,.7)!important}
+html[data-skin=starlight] .btn.p,html[data-skin=starlight] .send,html[data-skin=starlight] .chip[aria-pressed=true]{color:#fff!important;background:var(--sl-btn)!important;box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -1px 1px rgba(255,255,255,.12),var(--sl-glow)!important}
+html[data-skin=starlight] .send:hover{filter:brightness(1.08)}
+html[data-skin=starlight] .chip svg{color:var(--sl-ice)}
+html[data-skin=starlight] .sw[aria-checked=true]{background:linear-gradient(135deg,#3d6bff,#6f95ff)!important}
+
+/* ---------- the composer ---------- */
+html[data-skin=starlight] .comp{background:linear-gradient(170deg,rgba(111,149,255,.13),rgba(111,149,255,.03) 40%,rgba(142,140,255,.04)),rgba(5,10,28,.72)!important;
+ box-shadow:inset 0 1px 0 rgba(190,212,255,.16),inset 0 0 0 1px rgba(124,156,255,.2),0 30px 70px -22px rgba(0,2,14,.95),0 0 60px -30px rgba(61,107,255,.5)!important}
+html[data-skin=starlight] .comp:focus-within{box-shadow:inset 0 1px 0 rgba(190,212,255,.2),inset 0 0 0 1px rgba(150,180,255,.46),0 30px 70px -22px rgba(0,2,14,.95),0 0 80px -26px rgba(61,107,255,.75)!important}
+html[data-skin=starlight] .comp textarea::placeholder{color:rgba(190,206,255,.5)!important}
+html[data-skin=starlight] .wave i{background:rgba(168,212,255,.7)!important}
+html[data-skin=starlight] .cphase{color:var(--sl-ice)!important}
+
+/* ---------- conversation ---------- */
+html[data-skin=starlight] .cxq{background:linear-gradient(135deg,#2f5bff,#5b7cff 70%,#7f86ff)!important;box-shadow:0 10px 26px -14px rgba(61,107,255,.9)}
+html[data-skin=starlight] #idle h1{background:linear-gradient(180deg,#f4f7ff 30%,#a8d4ff);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+
+/* ---------- the window chrome ---------- */
+html[data-skin=starlight] #windowChrome{background:linear-gradient(180deg,rgba(6,12,32,.97),rgba(3,6,18,.94))!important;border-bottom-color:rgba(124,156,255,.12)!important}
+html[data-skin=starlight] .chrome-live{background:#6f95ff!important;box-shadow:0 0 8px #3d6bff!important}
+
+/* ---------- Grainient placeholders ---------- */
+.grainient-fill{background-position:center;background-repeat:no-repeat}
+html[data-skin=starlight] .av.grainient-fill{background-color:#0a1430!important;box-shadow:inset 0 0 0 1px rgba(190,212,255,.3),0 8px 22px -8px rgba(0,2,14,.8)!important;color:#fff!important;text-shadow:0 1px 6px rgba(0,8,40,.8)}
+img.grainient-img{object-fit:cover;border-radius:10px;background:#0a1430}
+/* @end starlight.css */
+#uiset .skins{display:flex;gap:6px;flex:none}
+#uiset .skins .chip{min-height:34px;padding:0 14px;font-size:13px}
+/* artifact cards: a Grainient cover band (seeded by the artifact id) */
+.art-card .art-cover{display:none}
+html[data-skin=starlight] .art-card{padding-top:0!important;overflow:hidden;background:linear-gradient(180deg,rgba(10,20,52,.7),rgba(5,10,26,.78))!important}
+html[data-skin=starlight] .art-card .art-cover{display:block;height:46px;margin:0 -14px 6px;background:#0a1430 center/cover no-repeat;
+ -webkit-mask:linear-gradient(180deg,#000 40%,transparent);mask:linear-gradient(180deg,#000 40%,transparent);opacity:.9}
+html[data-skin=starlight] .art-chip{background:rgba(8,16,42,.7)!important;box-shadow:inset 0 0 0 1px rgba(124,156,255,.22)!important}
+/* the live Grainient (pointer over a placeholder) draws inside its host */
+.grainient-fill,.art-cover{isolation:isolate}
+.art-card .art-cover{position:relative;overflow:hidden}

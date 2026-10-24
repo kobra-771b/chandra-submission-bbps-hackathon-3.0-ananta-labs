@@ -19,7 +19,7 @@ ul,ol{padding-left:1.3rem}li{margin:.5rem 0}
 .cards article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem}
 .cards p{margin:.3rem 0 0;color:var(--mut)}
 .btn{display:inline-block;margin-top:.6rem;padding:.4rem .9rem;border-radius:8px;background:var(--acc);color:var(--bg);text-decoration:none}
-.n{position:absolute;right:16px;bottom:1rem;color:var(--mut);font-size:.8rem}
+.n{position:absolute;left:16px;bottom:1rem;color:var(--mut);font-size:.8rem}
 .home{max-width:60rem;margin:0 auto;padding:3rem 16px;min-height:calc(100vh - 8rem)}
 .nav{position:fixed;right:16px;bottom:3.6rem;display:flex;gap:.4rem}
 .nav button{padding:.4rem .8rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
