@@ -9,4 +9,4 @@
 Verify with `sha256sum -c SHA256SUMS.txt`.
 
 The Setup EXE is the build published at https://github.com/kobrx7-god/chandra-full/releases/tag/exe.
-That build carried API keys; those keys have been revoked by Ananta Labs and are no longer valid.
+That build carries placeholder API keys, as the hackathon asked. Supply your own keys in `chandra.env` for live use.
